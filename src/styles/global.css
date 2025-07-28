@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/* Custom theme configuration */
+@theme {
+    /* Header Colors */
+    --bgheader: #202020;
+    --color_header: #ffffff;
+    --color_menu: #000000;
+    --height-head: 60px;
+
+    /* Shop Colors */
+    --bgshop: #000000;
+    --colorshop: #000000;
+    --colorshophover: #288ad6;
+
+    /* Button Colors */
+    --bg_button: #111111;
+    --color_button: #ffffff;
+    --bg_button_add_to_cart: #288ad6;
+
+    /* Footer Colors */
+    --bgfooter: #202020;
+    --colorfooter: #ffffff;
+    --bgprefooter: #202020;
+
+    /* Menu Mobile Colors */
+    --colorbgmenumb: #111111;
+    --colortextmenumb: #ffffff;
+
+    /* Special Colors */
+    --bgflashsale: #e31515;
+
+    --font-family-sans: "Mulish", sans-serif;
+}
+
+/* Base styles */
+@layer base {
+    html {
+        font-family: var(--font-family-sans);
+        line-height: 1.4;
+        font-size: 14px;
+    }
+
+    body {
+        @apply antialiased;
+    }
+}
+
+/* Component styles */
+@layer components {}
