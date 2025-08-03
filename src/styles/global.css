@@ -42,7 +42,8 @@
     /* box shawdow */
     --shadow-header: 0 1px 5px 2px rgba(0, 0, 0, 0.15);
 
-
+    /* modal */
+    --color-modal: rgba(0, 0, 0, .9);
 }
 
 /* Base styles */

@@ -4,7 +4,7 @@ import CouponCarousel from "../Common/Carousel";
 const HeroSection: React.FC = () => {
   // Danh sách ảnh hero
   return (
-    <div className="w-full pt-6">
+    <div className="w-full md:pt-6">
       <CouponCarousel autoSlide={true}>
         <img
           className="w-full"

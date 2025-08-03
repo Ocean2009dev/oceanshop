@@ -423,12 +423,12 @@ export const Product: React.FC = () => {
                     <img
                       src={product.imgA}
                       alt={product.title.slice(-40)}
-                      className="w-full h-[260] object-center"
+                      className="w-full h-full  object-center"
                     />
                     {/* <img src="" alt="" /> */}
                   </div>
                   <p className="mb-4">{product.title}</p>
-                  <div>
+                  <div className="h-full">
                     <span className="text-red-600 text-[13px] font-medium">
                       {product.priceProduct}
                     </span>

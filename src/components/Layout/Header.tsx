@@ -8,6 +8,7 @@ import {
   FaLocationDot,
   FaSistrix,
   FaUser,
+  FaX,
 } from "react-icons/fa6";
 import { useState } from "react";
 
@@ -272,10 +273,15 @@ export const Nav: React.FC = () => {
 
 export const HeaderTop: React.FC = () => {
   const [showUser, setShowUser] = useState(true);
+  const [menu, setMenu] = useState(false);
+  // const [disPlay, setDisplay] = useState("none");
 
-  console.log(showUser);
   const handleLogin = (): void => {
     setShowUser(!showUser);
+  };
+  const handleModal = (): void => {
+    console.log(menu);
+    setMenu(!menu);
   };
 
   const handleSubmit = (e: React.FormEvent): void => {
@@ -286,10 +292,19 @@ export const HeaderTop: React.FC = () => {
   return (
     <div className="bg-bgheader">
       <Container>
-        <div className="flex items-center justify-between md:justify-between py-2">
+        <div className="flex items-center justify-between md:justify-between md:py-2">
           {/* menu Moblie */}
           <div className="md:hidden block text-white text-2xl ml-3 cursor-pointer">
-            <FaBars />
+            <FaBars onClick={handleModal} />
+
+            <div
+              className={`${
+                menu ? "block" : "hidden"
+              } p-10 flex justify-between bg-modal w-screen h-screen fixed top-0 left-0 z-10000`}
+            >
+              <h1>Menu</h1>
+              <FaX onClick={handleModal} />
+            </div>
           </div>
           {/* logo */}
           <h1 className="text-4xl text-white font-medium whitespace-nowrap">
