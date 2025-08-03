@@ -4,11 +4,13 @@ import {
   FaAngleDown,
   FaAngleRight,
   FaBars,
+  FaCaretUp,
   FaCartShopping,
   FaLocationDot,
   FaSistrix,
   FaUser,
 } from "react-icons/fa6";
+import { useState } from "react";
 
 export const MenuSubAdidas: React.FC = () => {
   return (
@@ -270,12 +272,25 @@ export const Nav: React.FC = () => {
 };
 
 export const HeaderTop: React.FC = () => {
+  const [showUser, setShowUser] = useState(true);
+  const [menu, setMenu] = useState(false);
+
+  console.log(showUser);
+  const handleLogin = (): void => {
+    setShowUser(!showUser);
+  };
+
+  const handleSubmit = (e: React.FormEvent): void => {
+    e.preventDefault();
+  };
+
+  // console.log("showuser khi click", showUser);
   return (
     <div className="bg-bgheader">
       <Container>
-        <div className="flex items-center  md:justify-between py-2">
+        <div className="flex items-center justify-between md:justify-between py-2">
           {/* menu Moblie */}
-          <div className="md:hidden block text-white text-2xl ml-3 mr-31 cursor-pointer">
+          <div className="md:hidden block text-white text-2xl ml-3 cursor-pointer">
             <FaBars />
           </div>
           {/* logo */}
@@ -283,6 +298,12 @@ export const HeaderTop: React.FC = () => {
             Ocean Shop
           </h1>
 
+          {/* menu Mobile */}
+          {/* <div className="md:hidden flex items-center cursor-pointer text-white">
+            <FaSistrix className=" w-6 h-6 font-semibold mr-2" />
+            <FaUser className="w-6 h-6 mr-2" />
+            <FaCartShopping className="w-6 h-6 mr-2" />
+          </div> */}
           {/* Thanh tìm kiếm mọi thứ */}
           <form
             action=""
@@ -300,10 +321,12 @@ export const HeaderTop: React.FC = () => {
           </form>
 
           {/* địa chỉ cửa hàng, đăng nhập và hiển thị số lượng giỏ hàng */}
-          <div className="hidden md:flex items-center justify-between text-white whitespace-nowrap cursor-pointer">
-            <div className="flex items-center ml-4">
+          <div className=" relative flex items-center justify-between text-white whitespace-nowrap cursor-pointer">
+            {/* địa chỉ cửa hàng */}
+            <div className="flex items-center ml-4 ">
               <FaLocationDot className="w-6 h-6" />
-              <div className=" ml-4">
+
+              <div className="hidden md:block ml-4">
                 <span>Hệ Thống</span>
                 <div className="flex items-center">
                   <span className="mr-0.5">Cửa hàng</span>
@@ -311,9 +334,57 @@ export const HeaderTop: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* đăng nhập */}
+
             <div className="flex items-center ml-4">
-              <FaUser className="w-6 h-6" />
-              <div className="ml-4">
+              <FaUser onClick={handleLogin} className="w-6 h-6" />
+              {!showUser && (
+                <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-white text-black absolute top-10 left-[-326px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
+                  <h1 className="text-center uppercase ">
+                    Đăng Nhập tài khoản
+                  </h1>
+                  <p className="text-center ">
+                    Nhập email và mật khẩu của bạn:
+                  </p>
+
+                  <form action="" className="mt-4">
+                    <div className="flex flex-col">
+                      <input
+                        type="text"
+                        placeholder="Nhập Email"
+                        className="px-5 py-2.5 w-full border border-content mb-2 outline-0"
+                      />
+                      <input
+                        type="password"
+                        placeholder="Nhập Mật Khẩu"
+                        className="px-5 py-2.5 w-full border border-content mb-2 outline-0"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="px-5 py-2.5 w-full bg-black text-white mb-2 outline-0 cursor-pointer"
+                      onClick={handleSubmit}
+                    >
+                      Đăng Nhập
+                    </button>
+                  </form>
+
+                  <div>
+                    <p className="mb-3">
+                      <span>Khách hàng tạo mới? </span>
+                      <a href="">Tạo tài khoản</a>
+                    </p>
+                    <p>
+                      <span>Quên mật khẩu? </span>
+                      <a href="">Khôi phục mật khẩu</a>
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="hidden md:block ml-4">
                 <span>Đăng Nhập</span>
                 <div className="flex items-center">
                   <span className="mr-0.5">Đăng Ký</span>
@@ -321,9 +392,11 @@ export const HeaderTop: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* hiển thị số lượng giỏ hàng */}
             <div className="flex items-center ml-4">
               <FaCartShopping className="w-6 h-6" />
-              <div className="ml-4">Giỏ Hàng</div>
+              <div className="hidden md:block ml-4">Giỏ Hàng</div>
             </div>
           </div>
         </div>

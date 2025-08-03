@@ -47,7 +47,7 @@ export const CouponCard: React.FC = () => {
     },
   ];
   return (
-    <div className="md:grid md:grid-cols-4 gap-1 md:gap-3 pt-6 flex overflow-x-auto pb-2">
+    <div className="md:grid md:grid-cols-4 gap-14 md:gap-3 pt-6 flex overflow-x-auto pb-2">
       {couponList.map((coupon) => (
         <div
           key={coupon.id}
@@ -290,7 +290,7 @@ export const CouponTable: React.FC = () => {
 export const Coupon: React.FC = () => {
   return (
     <>
-      <div className="mt-6 mx-2">
+      <div className="mt-6">
         <h1 className="text-2xl font-semibold pl-2 border-l-3 border-black uppercase">
           Khuyến mãi dành cho bạn
         </h1>
@@ -303,10 +303,162 @@ export const Coupon: React.FC = () => {
   );
 };
 
-export const FeaturedProducts: React.FC = () => {
+export const Product: React.FC = () => {
+  interface ProductDiscountList {
+    id?: number;
+    title: string;
+    priceProduct: string;
+    discountProduct: string;
+    imgA: string;
+    imgB: string;
+  }
+  const productDiscountList: ProductDiscountList[] = [
+    {
+      id: 1,
+      title: " Giày Nike Jordan 1 Retro High OG SP 'Utility Stash' DN4336-001 ",
+      priceProduct: "7,929,900₫",
+      discountProduct: "8,900,000₫",
+      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876731/shoe1a_pj9stt.png",
+      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe1b_rtpmwz.webp",
+    },
+    {
+      id: 2,
+      title: "  Giày Nike Air Jordan 1 Mid GS 'White Shadow' 554725-073  ",
+      priceProduct: "7,573,500₫",
+      discountProduct: "8,500,000₫",
+      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876731/shoe2a_t85m61.webp",
+      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe2b_bzamfq.png",
+    },
+    {
+      id: 3,
+      title: "  Giày Nike Jordan 1 Retro Golf 'Starfish' DD9315-800  ",
+      priceProduct: "6,147,900₫",
+      discountProduct: "6,900,000₫",
+      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876733/shoe3a_drpxsn.webp",
+      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876737/shoe3b_fdqojy.png",
+    },
+    {
+      id: 4,
+      title: "  Giày Nike Jordan 1 High OG 'Denim' DM9036-104  ",
+      priceProduct: "6,147,900₫",
+      discountProduct: "6,900,000₫",
+      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe4a_rb0b31.webp",
+      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe4b_q7rsz5.png",
+    },
+    {
+      id: 5,
+      title: "  Giày Nike Air Jordan 1 Retro High OG 'Volt' 555088-702  ",
+      priceProduct: "6,147,900₫",
+      discountProduct: "6,900,000₫",
+      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe5a_ctdruv.webp",
+      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876733/shoe5b_xi6c2a.png",
+    },
+    {
+      id: 6,
+      title: "  Giày Nike Jordan 1 Mid 'Light Smoke Grey' 554725-078  ",
+      priceProduct: "5,524,200₫",
+      discountProduct: "6,200,000₫",
+      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876733/shoe6a_edwarv.webp",
+      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe6b_uvyiw8.webp",
+    },
+    {
+      id: 7,
+      title: " Giày Nike Wmns Air Jordan 1 Mid 'Shadow' BQ6472-007 ",
+      priceProduct: "5,256,900₫",
+      discountProduct: "5,900,000₫",
+      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876740/shoe7a_umcsyd.png",
+      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876740/shoe7b_yixw9d.png",
+    },
+    {
+      id: 8,
+      title: "Giày Nike Wmns Air Jordan 1 Mid 'Particle Grey' DO7139-002  ",
+      priceProduct: "5,256,900₫",
+      discountProduct: "5,900,000₫",
+      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876741/shoe8a_xyijxv.png",
+      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876739/shoe8b_r7wpcj.png",
+    },
+    {
+      id: 9,
+      title: " Giày Nike Wmns Air Jordan 1 Low 'Siren Red' DC0774-060",
+      priceProduct: "5,256,900₫",
+      discountProduct: "5,900,000₫",
+      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876739/shoe9a_tqcd2t.png",
+      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876739/shoe9b_rky2mk.png",
+    },
+    {
+      id: 10,
+      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
+      priceProduct: "5,256,900₫",
+      discountProduct: "5,900,000₫",
+      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
+      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
+    },
+  ];
   return (
     <>
-      <Coupon />
+      <div className="mt-6 mb-6">
+        <div className="flex md:items-center md:justify-between flex-col md:flex-row mb-6">
+          <h1 className="text-2xl font-semibold uppercase mb-3">
+            giày sneaker
+          </h1>
+
+          <div className="flex gap-2.5">
+            <button className="bg-shophover text-white rounded-5px p-2.5 outline-none cursor-pointer">
+              Giày Adidas
+            </button>
+            <button className="bg-shophover text-white rounded-5px p-2.5 outline-none cursor-pointer">
+              Giày Nike
+            </button>
+            <button className="bg-shophover text-white rounded-5px p-2.5 outline-none cursor-pointer">
+              Giày Gucci
+            </button>
+          </div>
+        </div>
+        <div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5">
+            {productDiscountList.map((product) => {
+              return (
+                <div key={product.id} className="bg-white p-2.5">
+                  <div className="mb-4">
+                    <img
+                      src={product.imgA}
+                      alt={product.title.slice(-40)}
+                      className="w-full h-[260] object-center"
+                    />
+                    {/* <img src="" alt="" /> */}
+                  </div>
+                  <p className="mb-4">{product.title}</p>
+                  <div>
+                    <span className="text-red-600 text-[13px] font-medium">
+                      {product.priceProduct}
+                    </span>
+                    <span className="text-[13px] font-medium ml-3 line-through text-gray-500">
+                      {product.discountProduct}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="md:mt-9 mt-3 flex items-center justify-center">
+          <button className="outline-none flex items-center bg-white hover:bg-black hover:text-white text-black transition duration-300 ease-in-out px-5 py-2.5 cursor-pointer rounded-5px">
+            <span className=" ">Xem tất cả</span>
+            <FaAnglesRight className=" ml-3" />
+          </button>
+        </div>
+      </div>
     </>
+  );
+};
+
+//
+
+export const FeaturedProducts: React.FC = () => {
+  return (
+    <div className="mx-2 md:mx-0">
+      <Coupon />
+      <Product />
+    </div>
   );
 };
