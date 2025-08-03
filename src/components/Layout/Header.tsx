@@ -4,7 +4,6 @@ import {
   FaAngleDown,
   FaAngleRight,
   FaBars,
-  FaCaretUp,
   FaCartShopping,
   FaLocationDot,
   FaSistrix,
@@ -273,7 +272,6 @@ export const Nav: React.FC = () => {
 
 export const HeaderTop: React.FC = () => {
   const [showUser, setShowUser] = useState(true);
-  const [menu, setMenu] = useState(false);
 
   console.log(showUser);
   const handleLogin = (): void => {
