@@ -6,6 +6,7 @@ import {
   FaBars,
   FaCartShopping,
   FaLocationDot,
+  FaPhone,
   FaSistrix,
   FaUser,
   FaX,
@@ -272,11 +273,93 @@ export const Nav: React.FC = () => {
 };
 
 export const HeaderTop: React.FC = () => {
-  const [showUser, setShowUser] = useState(true);
+  interface City {
+    id: number;
+    phoneNumber: string;
+    citi: string;
+    district: string;
+    road: string;
+    nameShop: string;
+  }
+  const citiList: City[] = [
+    {
+      id: 1,
+      phoneNumber: "0983 456 789",
+      citi: "Hồ Chí Minh",
+      district: "Quận 10",
+      road: "168 3 Tháng 2, Phường 12, Quận 10",
+      nameShop: "Lucky Card CN",
+    },
+    {
+      id: 2,
+      phoneNumber: "0978 123 456",
+      citi: "Hồ Chí Minh",
+      district: "Quận Bình Thạnh",
+      road: "244 Điện Biên Phủ, Phường 22, Quận Bình Thạnh",
+      nameShop: "Lucky Card CN",
+    },
+    {
+      id: 3,
+      phoneNumber: "0962 789 012",
+      citi: "Hồ Chí Minh",
+      district: "Quận Thủ Đức",
+      road: "01 Võ Văn Ngân, Phường Linh Chiểu, Quận Thủ Đức",
+      nameShop: "Lucky Card CN",
+    },
+    {
+      id: 4,
+      phoneNumber: "0987 654 321",
+      citi: "Hà Nội",
+      district: "Quận Hoàn Kiếm",
+      road: "Số 15, Phố Hàng Đào, Phường Hàng Đào, Quận Hoàn Kiếm",
+      nameShop: "Lucky Card CN",
+    },
+    {
+      id: 5,
+      phoneNumber: "0979 876 543",
+      citi: "Hà Nội",
+      district: "Quận Ba Đình",
+      road: "Số 120, Đường Kim Mã, Phường Kim Mã, Quận Ba Đình",
+      nameShop: "Lucky Card CN",
+    },
+    {
+      id: 6,
+      phoneNumber: "0961 234 567",
+      citi: "Hà Nội",
+      district: "Quận Hai Bà Trưng",
+      road: "Số 220, Phố Bà Triệu, Phường Lê Đại Hành, Quận Hai Bà Trưng",
+      nameShop: "Lucky Card CN",
+    },
+  ];
+  const [showUser, setShowUser] = useState(false);
+  const [showLocation, setShowLocation] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const [menu, setMenu] = useState(false);
 
+  const handleSearch = (): void => {
+    setShowSearch(!showSearch);
+    setShowLocation(false);
+    setShowCart(false);
+    setShowUser(false);
+  };
   const handleLogin = (): void => {
     setShowUser(!showUser);
+    setShowLocation(false);
+    setShowCart(false);
+    setShowSearch(false);
+  };
+  const handleCart = (): void => {
+    setShowCart(!showCart);
+    setShowLocation(false);
+    setShowSearch(false);
+    setShowUser(false);
+  };
+  const handleLocation = (): void => {
+    setShowLocation(!showLocation);
+    setShowUser(false);
+    setShowCart(false);
+    setShowSearch(false);
   };
   const handleModal = (): void => {
     setMenu(!menu);
@@ -285,7 +368,6 @@ export const HeaderTop: React.FC = () => {
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
   };
-
   return (
     <div className="bg-bgheader">
       <Container>
@@ -346,7 +428,7 @@ export const HeaderTop: React.FC = () => {
             <input
               type="text"
               placeholder="Giày..."
-              className="w-full px-2.5 py-2.5 outline-hidden bg-transparent"
+              className=" w-full px-2.5 py-2.5 outline-hidden bg-transparent"
             />
 
             <div className="flex items-center bg-bg_button rounded-[5px] px-6 py-1.5 cursor-pointer">
@@ -356,8 +438,28 @@ export const HeaderTop: React.FC = () => {
 
           {/* địa chỉ cửa hàng, đăng nhập và hiển thị số lượng giỏ hàng */}
           <div className=" relative flex items-center justify-between text-white whitespace-nowrap cursor-pointer mr-2">
+            {/* tìm kiếm mobile */}
+            <div className="block md:hidden" onClick={handleSearch}>
+              <FaSistrix className="text-white w-6 h-6 font-extrabold" />
+            </div>
+
+            {showSearch && (
+              <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-white text-black absolute top-10 left-[-291px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
+                <div className="text-center pb-6 ">
+                  <h1 className="text-center text-xl font-semibold uppercase border-b-2 border-b-[#ddd] pb-3 ">
+                    Tìm kiếm
+                  </h1>
+
+                  <input
+                    type="text"
+                    placeholder="Giày..."
+                    className="mt-3 w-full px-4 py-2.5 outline-hidden bg-content"
+                  />
+                </div>
+              </div>
+            )}
             {/* địa chỉ cửa hàng */}
-            <div className="flex items-center ml-4 ">
+            <div className="flex items-center ml-4 " onClick={handleLocation}>
               <FaLocationDot className="w-6 h-6" />
 
               <div className="hidden md:block ml-4">
@@ -369,54 +471,67 @@ export const HeaderTop: React.FC = () => {
               </div>
             </div>
 
-            {/* đăng nhập */}
+            {showLocation && (
+              <div className="md:w-[433px] w-screen py-2.5 px-5 shadow-2xl bg-content text-black absolute top-10 left-[-291px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
+                <h1 className="text-[17px]  uppercase text-center font-semibold mb-2">
+                  TÌM CỬA HÀNG GẦN BẠN
+                </h1>
+                <div className="flex justify-between mb-3 ">
+                  <select
+                    id="currency"
+                    name="currency"
+                    className="w-full h-full p-3 mr-1 rounded-md border-[1px] border-[#D7D7D7]  bg-white outline-none pl-2 pr-7 text-gray-500  sm:text-sm"
+                  >
+                    <option>Chọn Tỉnh/ Thành Phố</option>
+                    <option value={1}>Hồ Chí Minh</option>
+                    <option value={2}>Hà Nội</option>
+                  </select>
+                  <select
+                    id="currency"
+                    name="currency"
+                    className="w-full h-full p-3 ml-1 rounded-md border-[1px] border-[#D7D7D7] bg-white outline-none pl-2 pr-7 text-gray-500  sm:text-sm"
+                  >
+                    <option>Chọn Quận/ Huyện</option>
 
-            <div className="flex items-center ml-4">
-              <FaUser onClick={handleLogin} className="w-6 h-6" />
-              {!showUser && (
-                <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-white text-black absolute top-10 left-[-326px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
-                  <h1 className="text-center uppercase ">
-                    Đăng Nhập tài khoản
-                  </h1>
-                  <p className="text-center ">
-                    Nhập email và mật khẩu của bạn:
-                  </p>
-
-                  <form action="" className="mt-4">
-                    <div className="flex flex-col">
-                      <input
-                        type="text"
-                        placeholder="Nhập Email"
-                        className="px-5 py-2.5 w-full border border-content mb-2 outline-0"
-                      />
-                      <input
-                        type="password"
-                        placeholder="Nhập Mật Khẩu"
-                        className="px-5 py-2.5 w-full border border-content mb-2 outline-0"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="px-5 py-2.5 w-full bg-black text-white mb-2 outline-0 cursor-pointer"
-                      onClick={handleSubmit}
-                    >
-                      Đăng Nhập
-                    </button>
-                  </form>
-
-                  <div>
-                    <p className="mb-3">
-                      <span>Khách hàng tạo mới? </span>
-                      <a href="">Tạo tài khoản</a>
-                    </p>
-                    <p>
-                      <span>Quên mật khẩu? </span>
-                      <a href="">Khôi phục mật khẩu</a>
-                    </p>
-                  </div>
+                    {citiList.map((citiItem, index) => (
+                      <option key={index} value={citiItem.id}>
+                        {citiItem.district}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              )}
+                <div className="h-80 overflow-y-scroll">
+                  {citiList.map((city) => {
+                    return (
+                      <div
+                        className="bg-white p-4 mb-2 flex flex-col gap-1 "
+                        key={city.id}
+                      >
+                        <h1 className="text-black text-[15px] font-bold">
+                          {city.citi} - {city.nameShop} {city.district}
+                        </h1>
+                        <div>
+                          <span className="w-full text-black text-[15px] font-normal break-words block whitespace-normal">
+                            {city.road}
+                          </span>
+                          <span className="flex items-center text-black text-[15px] font-medium">
+                            <FaPhone className="mr-2" />
+                            {city.phoneNumber}
+                          </span>
+                          <span className="text-black text-[15px] font-normal">
+                            Thời gian hoạt động : 9h - 21h
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* đăng nhập */}
+            <div className="flex items-center ml-4" onClick={handleLogin}>
+              <FaUser className="w-6 h-6" />
 
               <div className="hidden md:block ml-4">
                 <span>Đăng Nhập</span>
@@ -427,11 +542,91 @@ export const HeaderTop: React.FC = () => {
               </div>
             </div>
 
+            {showUser && (
+              <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-white text-black absolute top-10 left-[-291px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
+                <h1 className="text-center font-semibold  uppercase ">
+                  Đăng Nhập tài khoản
+                </h1>
+                <p className="text-center ">Nhập email và mật khẩu của bạn:</p>
+
+                <form action="" className="mt-4">
+                  <div className="flex flex-col">
+                    <input
+                      type="text"
+                      placeholder="Nhập Email"
+                      className="px-5 py-2.5 w-full border border-content mb-2 outline-0"
+                    />
+                    <input
+                      type="password"
+                      placeholder="Nhập Mật Khẩu"
+                      className="px-5 py-2.5 w-full border border-content mb-2 outline-0"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 w-full bg-black text-white mb-2 outline-0 cursor-pointer"
+                    onClick={handleSubmit}
+                  >
+                    Đăng Nhập
+                  </button>
+                </form>
+
+                <div>
+                  <p className="mb-3">
+                    <span>Khách hàng tạo mới? </span>
+                    <a href="">Tạo tài khoản</a>
+                  </p>
+                  <p>
+                    <span>Quên mật khẩu? </span>
+                    <a href="">Khôi phục mật khẩu</a>
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* hiển thị số lượng giỏ hàng */}
-            <div className="flex items-center ml-4">
+            <div className="flex items-center ml-4" onClick={handleCart}>
               <FaCartShopping className="w-6 h-6" />
               <div className="hidden md:block ml-4">Giỏ Hàng</div>
             </div>
+            {showCart && (
+              <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-white text-black absolute top-10 left-[-291px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
+                <div className="text-center pb-6 border-b-2 border-b-[#ddd]">
+                  <h1 className="text-center font-semibold uppercase ">
+                    Giỏ hàng
+                  </h1>
+
+                  <div
+                    id="data-cart"
+                    className="flex flex-col items-center justify-center"
+                  >
+                    <img
+                      src="https://res.cloudinary.com/ds6vqu3dy/image/upload/v1754296259/cart_zyxa8k.png"
+                      alt="cart"
+                    />
+                    <p>Hiện chưa có sản phẩm</p>
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <div className="flex justify-between mb-6">
+                    <h1 className="text-2xl font-semibold uppercase">
+                      Tổng tiền
+                    </h1>
+                    <p className="text-2xl text-red-600">0Đ</p>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <button className="p-3 border-[1px] w-full outline-0 uppercase font-bold cursor-pointer bg-black text-white hover:bg-white hover:text-black">
+                      xem giỏ hàng
+                    </button>
+                    <button className="p-3 border-[1px] w-full outline-0 uppercase font-bold cursor-pointer hover:bg-black hover:text-white">
+                      thanh toán
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </Container>
