@@ -9,6 +9,7 @@ type Props = {
   perViewDesktop?: number;
   autoSlide?: boolean;
   interval?: number;
+  className?: string;
 };
 
 export default function CouponCarousel({
@@ -17,6 +18,7 @@ export default function CouponCarousel({
   perViewDesktop = 1,
   autoSlide = true,
   interval = 3000,
+  className = "",
 }: Props) {
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     loop: true,
@@ -45,7 +47,10 @@ export default function CouponCarousel({
   return (
     <div className="relative">
       {/* Slider container */}
-      <div ref={sliderRef} className="keen-slider overflow-hidden">
+      <div
+        ref={sliderRef}
+        className={`keen-slider overflow-hidden ${className ?? ""}`}
+      >
         {React.Children.map(children, (child, i) => (
           <div key={i} className="keen-slider__slide">
             {child}

@@ -454,11 +454,24 @@ export const Product: React.FC = () => {
 
 //
 
+export const Banner: React.FC = () => {
+  return (
+    <div className="pb-6">
+      <img
+        src="https://res.cloudinary.com/ds6vqu3dy/image/upload/v1754276362/bannerproduct_wmbjp3.webp"
+        alt="banner"
+        className="animate-flicker shadow-[0_0_20px_rgba(255,255,255,0.6)]"
+      />
+    </div>
+  );
+};
+
 export const FeaturedProducts: React.FC = () => {
   return (
     <div className="mx-2 md:mx-0">
       <Coupon />
       <Product />
+      <Banner />
     </div>
   );
 };

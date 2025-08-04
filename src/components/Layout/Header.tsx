@@ -300,10 +300,40 @@ export const HeaderTop: React.FC = () => {
             <div
               className={`${
                 menu ? "block" : "hidden"
-              } p-10 flex justify-between bg-modal w-screen h-screen fixed top-0 left-0 z-10000`}
+              } p-10  bg-modal w-screen h-screen fixed top-0 left-0 z-10000`}
             >
-              <h1>Menu</h1>
-              <FaX onClick={handleModal} />
+              <div className="flex justify-between">
+                <h1>Menu</h1>
+                <FaX onClick={handleModal} />
+              </div>
+
+              <div className="mt-6">
+                <ul className="text-[16px] font-medium">
+                  <li className="py-2.5  cursor-pointer hover:text-shophover transition-all delay-75 duration-150 ease-in-out">
+                    <a href="">Trang Chủ</a>
+                  </li>
+                  <li className=" group/item py-2.5  hover:text-shophover  transition-all delay-75 duration-150 ease-in-out cursor-pointer">
+                    <div className="flex items-center  ">
+                      <a href="" className="mr-2 ">
+                        Giày Sneaker
+                      </a>
+                      <FaAngleDown />
+                    </div>
+
+                    {/* nav sub giày sneaker */}
+                    <MenuSubSneaker />
+                  </li>
+                  <li className="py-2.5  cursor-pointer hover:text-shophover transition-all delay-75 duration-150 ease-in-out">
+                    <a href="">Liên Hệ</a>
+                  </li>
+                  <li className="py-2.5  flex items-center cursor-pointer hover:text-shophover transition-all delay-75 duration-150 ease-in-out">
+                    <a href="" className="mr-2">
+                      Tính Năng
+                    </a>
+                    <FaAngleDown />
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
           {/* logo */}
@@ -312,11 +342,6 @@ export const HeaderTop: React.FC = () => {
           </h1>
 
           {/* menu Mobile */}
-          {/* <div className="md:hidden flex items-center cursor-pointer text-white">
-            <FaSistrix className=" w-6 h-6 font-semibold mr-2" />
-            <FaUser className="w-6 h-6 mr-2" />
-            <FaCartShopping className="w-6 h-6 mr-2" />
-          </div> */}
           {/* Thanh tìm kiếm mọi thứ */}
           <form
             action=""

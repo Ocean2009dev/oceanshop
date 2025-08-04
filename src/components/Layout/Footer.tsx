@@ -12,7 +12,8 @@ const Footer: React.FC = () => {
             <h1 className="text-[17px] font-light uppercase mb-3 md:mb-0 whitespace-nowrap  md:mr-3">
               Đăng Ký Nhận Tin
             </h1>
-            <div className="w-full flex items-center justify-between mb-3 md:mb-0 ">
+
+            <div className="w-full flex items-center  mb-3 md:mb-0 ">
               <div className="w-full flex items-center bg-white md:w-[350px] ">
                 <MdOutlineEmail className="mx-2 text-[#9c9c9c]" />
                 <input
@@ -21,11 +22,12 @@ const Footer: React.FC = () => {
                   className="w-full placeholder:text-[#9c9c9c] text-black text-[14px] outline-none placeholder:text-[14px] py-3"
                 />
               </div>
-              <div className="flex items-center  md:py-3 px-4 bg-[#111] uppercase text-[14px] ">
+              <div className=" flex items-center  md:py-3 px-4 bg-[#111] uppercase text-[14px] ">
                 <FaArrowPointer className="mr-2" />
                 Đăng Ký
               </div>
             </div>
+
             <div className="flex cursor-pointer mb-3 md:mb-0">
               <img
                 width={28}
@@ -90,13 +92,13 @@ const Footer: React.FC = () => {
                     </li>
                     <li className="flex items-center  py-1 text-wrap group   ">
                       <FaPhone className="font-semibold mr-1" />
-                      <span className="text-[14px]  font-semibold  transition duration-300 ease-in-out group-hover:text-[--colorshophover] ">
+                      <span className="text-[14px]  font-semibold  transition duration-300 ease-in-out group-hover:text-shophover ">
                         0985449437
                       </span>
                     </li>
                     <li className="flex items-center pt-1 pb-2 group   ">
                       <MdOutlineEmail className="font-semibold mr-1" />
-                      <span className="text-[14px]  font-semibold  transition duration-300 ease-in-out group-hover:text-[--colorshophover] ">
+                      <span className="text-[14px]  font-semibold  transition duration-300 ease-in-out group-hover:text-shophover ">
                         duongoc79@gmail.com
                       </span>
                     </li>
@@ -112,34 +114,34 @@ const Footer: React.FC = () => {
 
               <div className="mb-8">
                 <span className="text-[17px] font-semibold">CHÍNH SÁCH</span>
-                <ul className="list-disc pt-2">
-                  <li className="py-1 group  ">
-                    <span className="text-[14px] font-semibold  group-hover:text-[--colorshophover] transition duration-300 ease-in-out">
+                <ul className="list-disc pt-2 ">
+                  <li className="py-1 group ">
+                    <span className="text-[14px] font-semibold  group-hover:text-shophover transition duration-300 ease-in-out">
                       Hệ thống cửa hàng
                     </span>
                   </li>
-                  <li className="py-1 group ">
-                    <span className="text-[14px] font-semibold  group-hover:text-[--colorshophover] transition duration-300 ease-in-out">
+                  <li className="py-1 group  ">
+                    <span className="text-[14px] font-semibold  group-hover:text-shophover transition duration-300 ease-in-out">
                       Giới thiệu
                     </span>
                   </li>
-                  <li className="py-1 group">
-                    <span className="text-[14px] font-semibold  group-hover:text-[--colorshophover] transition duration-300 ease-in-out">
+                  <li className="py-1 group ">
+                    <span className="text-[14px] font-semibold  group-hover:text-shophover transition duration-300 ease-in-out">
                       Chính sách đổi trả
                     </span>
                   </li>
-                  <li className="py-1 group">
-                    <span className="text-[14px] font-semibold  group-hover:text-[--colorshophover] transition duration-300 ease-in-out">
+                  <li className="py-1 group  ">
+                    <span className="text-[14px] font-semibold  group-hover:text-shophover transition duration-300 ease-in-out">
                       Chính sách bảo mật
                     </span>
                   </li>
-                  <li className="py-1 group">
-                    <span className=" text-[14px] font-semibold group-hover:text-[--colorshophover] transition duration-300 ease-in-out">
+                  <li className="py-1 group  ">
+                    <span className=" text-[14px] font-semibold group-hover:text-shophover transition duration-300 ease-in-out">
                       Điều khoản dịch vụ
                     </span>
                   </li>
-                  <li className="py-1 group">
-                    <span className="text-[14px] font-semibold  group-hover:text-[--colorshophover] transition duration-300 ease-in-out">
+                  <li className="py-1 group  ">
+                    <span className="text-[14px] font-semibold  group-hover:text-shophover transition duration-300 ease-in-out">
                       Liên Hệ
                     </span>
                   </li>
@@ -150,12 +152,12 @@ const Footer: React.FC = () => {
                   <span className="text-[17px] font-semibold">HƯỚNG DẪN</span>
                   <ul className="list-disc pt-2">
                     <li className="py-1 group">
-                      <span className="text-[14px] font-semibold group-hover:text-[--colorshophover] transition duration-300 ease-in-out">
+                      <span className="text-[14px] font-semibold group-hover:text-shophover transition duration-300 ease-in-out">
                         Sản phẩm nổi bật
                       </span>
                     </li>
                     <li className="py-1  group">
-                      <span className="text-[14px] font-semibold group-hover:text-[--colorshophover] transition duration-300 ease-in-out">
+                      <span className="text-[14px] font-semibold group-hover:text-shophover transition duration-300 ease-in-out">
                         Tất cả sản phẩm
                       </span>
                     </li>
@@ -164,7 +166,7 @@ const Footer: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 md:mt-0">
               <span className="text-2xl font-semibold">FANPAGE CHÚNG TÔI</span>
             </div>
           </div>
