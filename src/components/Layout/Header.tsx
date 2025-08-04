@@ -274,13 +274,11 @@ export const Nav: React.FC = () => {
 export const HeaderTop: React.FC = () => {
   const [showUser, setShowUser] = useState(true);
   const [menu, setMenu] = useState(false);
-  // const [disPlay, setDisplay] = useState("none");
 
   const handleLogin = (): void => {
     setShowUser(!showUser);
   };
   const handleModal = (): void => {
-    console.log(menu);
     setMenu(!menu);
   };
 
@@ -288,29 +286,31 @@ export const HeaderTop: React.FC = () => {
     e.preventDefault();
   };
 
-  // console.log("showuser khi click", showUser);
   return (
     <div className="bg-bgheader">
       <Container>
-        <div className="flex items-center justify-between md:justify-between md:py-2">
+        <div className="flex items-center justify-between md:justify-between py-2">
           {/* menu Moblie */}
           <div className="md:hidden block text-white text-2xl ml-3 cursor-pointer">
             <FaBars onClick={handleModal} />
 
+            {/* nav Moblie */}
             <div
               className={`${
                 menu ? "block" : "hidden"
-              } p-10  bg-modal w-screen h-screen fixed top-0 left-0 z-10000`}
+              } px-10 py-1  bg-modal w-screen h-screen overflow-hidden fixed top-0 left-0 z-10000 delay-75 animate-menu `}
             >
-              <div className="flex justify-between">
-                <h1>Menu</h1>
+              <div className="flex items-center justify-between">
+                <h1 className="ml-13 text-4xl text-white font-medium whitespace-nowrap">
+                  Ocean Shop
+                </h1>
                 <FaX onClick={handleModal} />
               </div>
 
               <div className="mt-6">
                 <ul className="text-[16px] font-medium">
                   <li className="py-2.5  cursor-pointer hover:text-shophover transition-all delay-75 duration-150 ease-in-out">
-                    <a href="">Trang Chủ</a>
+                    <a href="/">Trang Chủ</a>
                   </li>
                   <li className=" group/item py-2.5  hover:text-shophover  transition-all delay-75 duration-150 ease-in-out cursor-pointer">
                     <div className="flex items-center  ">
@@ -319,9 +319,6 @@ export const HeaderTop: React.FC = () => {
                       </a>
                       <FaAngleDown />
                     </div>
-
-                    {/* nav sub giày sneaker */}
-                    <MenuSubSneaker />
                   </li>
                   <li className="py-2.5  cursor-pointer hover:text-shophover transition-all delay-75 duration-150 ease-in-out">
                     <a href="">Liên Hệ</a>
@@ -341,7 +338,6 @@ export const HeaderTop: React.FC = () => {
             Ocean Shop
           </h1>
 
-          {/* menu Mobile */}
           {/* Thanh tìm kiếm mọi thứ */}
           <form
             action=""
@@ -359,7 +355,7 @@ export const HeaderTop: React.FC = () => {
           </form>
 
           {/* địa chỉ cửa hàng, đăng nhập và hiển thị số lượng giỏ hàng */}
-          <div className=" relative flex items-center justify-between text-white whitespace-nowrap cursor-pointer">
+          <div className=" relative flex items-center justify-between text-white whitespace-nowrap cursor-pointer mr-2">
             {/* địa chỉ cửa hàng */}
             <div className="flex items-center ml-4 ">
               <FaLocationDot className="w-6 h-6" />
