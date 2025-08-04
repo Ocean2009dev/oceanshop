@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CouponCarousel from "../Common/Carousel";
 import { FaAnglesRight } from "react-icons/fa6";
 
@@ -47,14 +47,14 @@ export const CouponCard: React.FC = () => {
     },
   ];
   return (
-    <div className="md:grid md:grid-cols-4 gap-14 md:gap-3 pt-6 flex overflow-x-auto pb-2">
+    <div className="md:grid md:grid-cols-4 gap-14 md:gap-1 pt-6 flex overflow-x-auto pb-2">
       {couponList.map((coupon) => (
         <div
           key={coupon.id}
           data-code={coupon.code}
           className="min-w-[280px] md:min-w-0 w-full shadow-lg flex items-stretch bg-white border-l-10 border-l-red-600 rounded-5px flex-shrink-0"
         >
-          <div className="w-1/3 min-w-[80px] p-1 border-r-[1px] border-dashed border-[#ccc] flex justify-center items-center">
+          <div className="w-1/3  border-r-[1px] border-dashed border-[#ccc] flex justify-center items-center">
             <span className="text-2xl text-red-600 font-bold">
               {coupon.price}
             </span>
@@ -68,10 +68,10 @@ export const CouponCard: React.FC = () => {
                 {coupon.priceOrder}
               </small>
             </div>
-            <div className="w-full flex items-center justify-between mt-2">
-              <div className="flex-1 min-w-0">
+            <div className="w-full flex items-center justify-between mt-2 overflow-hidden">
+              <div className="flex-1 whitespace-nowrap">
                 <span className="text-[11px] block">
-                  mã:{" "}
+                  mã:
                   <strong className="text-[11px] font-bold">
                     {coupon.code}
                   </strong>
@@ -80,7 +80,7 @@ export const CouponCard: React.FC = () => {
                   {coupon.date}
                 </span>
               </div>
-              <div className="ml-2">
+              <div className="ml-1">
                 <button className="px-3 py-1 bg-black hover:bg-red-600 text-white rounded-[50px] text-[10px] cursor-pointer flex-shrink-0 whitespace-nowrap">
                   sao chép
                 </button>
@@ -185,6 +185,35 @@ export const CouponTable: React.FC = () => {
     },
   ];
 
+  const [day, setDay] = useState(0);
+  const [hour, setHour] = useState(0);
+  const [minute, setMinute] = useState(0);
+  const [second, setSecond] = useState(0);
+
+  useEffect(() => {
+    let totalSeconds = 10800; // 3 tiếng
+
+    const timer = setInterval(() => {
+      const days = Math.floor(totalSeconds / (3600 * 24));
+      const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      setDay(days);
+      setHour(hours);
+      setMinute(minutes);
+      setSecond(seconds);
+
+      if (totalSeconds <= 0) {
+        clearInterval(timer);
+      }
+
+      totalSeconds--;
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className="mt-6 p-4 rounded-xl bg-red-600">
       <div className="flex items-center">
@@ -199,7 +228,7 @@ export const CouponTable: React.FC = () => {
         <div className="flex ml-10">
           <div className="min-w-11 h-11 bg-white rounded-5px px-2 py-1.5 ml-3">
             <span className="whitespace-nowrap text-[11px] font-semibold block">
-              00
+              {day.toString().padStart(2, "0")}
             </span>
             <span className="whitespace-nowrap text-[11px] font-semibold block">
               Ngày
@@ -207,7 +236,7 @@ export const CouponTable: React.FC = () => {
           </div>
           <div className="min-w-11 h-11 bg-white rounded-5px px-2 py-1.5 ml-3">
             <span className="whitespace-nowrap text-[11px] font-semibold block">
-              00
+              {hour.toString().padStart(2, "0")}
             </span>
             <span className="whitespace-nowrap text-[11px] font-semibold block">
               Giờ
@@ -215,7 +244,7 @@ export const CouponTable: React.FC = () => {
           </div>
           <div className="min-w-11 h-11 bg-white rounded-5px px-2 py-1.5 ml-3">
             <span className="whitespace-nowrap text-[11px] font-semibold block">
-              00
+              {minute.toString().padStart(2, "0")}
             </span>
             <span className="whitespace-nowrap text-[11px] font-semibold block">
               Phút
@@ -223,7 +252,7 @@ export const CouponTable: React.FC = () => {
           </div>
           <div className="min-w-11 h-11 bg-white rounded-5px px-2 py-1.5 ml-3">
             <span className="whitespace-nowrap text-[11px] font-semibold block">
-              00
+              {second.toString().padStart(2, "0")}
             </span>
             <span className="whitespace-nowrap text-[11px] font-semibold block">
               Giây
@@ -395,60 +424,59 @@ export const Product: React.FC = () => {
     },
   ];
   return (
-    <>
-      <div className="mt-6 mb-6">
-        <div className="flex md:items-center md:justify-between flex-col md:flex-row mb-6">
-          <h1 className="text-2xl font-semibold uppercase mb-3">
-            giày sneaker
-          </h1>
+    <div className="mt-6 mb-6">
+      <div className="flex md:items-center md:justify-between flex-col md:flex-row mb-6">
+        <h1 className="text-2xl font-semibold uppercase mb-3">giày sneaker</h1>
 
-          <div className="flex gap-2.5">
-            <button className="bg-shophover text-white rounded-5px p-2.5 outline-none cursor-pointer">
-              Giày Adidas
-            </button>
-            <button className="bg-shophover text-white rounded-5px p-2.5 outline-none cursor-pointer">
-              Giày Nike
-            </button>
-            <button className="bg-shophover text-white rounded-5px p-2.5 outline-none cursor-pointer">
-              Giày Gucci
-            </button>
-          </div>
-        </div>
-        <div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5">
-            {productDiscountList.map((product) => {
-              return (
-                <div key={product.id} className="bg-white p-2.5">
-                  <div className="mb-4">
-                    <img
-                      src={product.imgA}
-                      alt={product.title.slice(-40)}
-                      className="w-full h-full  object-center"
-                    />
-                    {/* <img src="" alt="" /> */}
-                  </div>
-                  <p className="mb-4">{product.title}</p>
-                  <div className="h-full">
-                    <span className="text-red-600 text-[13px] font-medium">
-                      {product.priceProduct}
-                    </span>
-                    <span className="text-[13px] font-medium ml-3 line-through text-gray-500">
-                      {product.discountProduct}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        <div className="md:mt-9 mt-3 flex items-center justify-center">
-          <button className="outline-none flex items-center bg-white hover:bg-black hover:text-white text-black transition duration-300 ease-in-out px-5 py-2.5 cursor-pointer rounded-5px">
-            <span className=" ">Xem tất cả</span>
-            <FaAnglesRight className=" ml-3" />
+        <div className="flex gap-2.5">
+          <button className="border-[1px] bg-shophover text-white rounded-5px p-2.5 outline-none cursor-pointer">
+            <span className="uppercase">Giày Adidas</span>
+          </button>
+          <button className="hover:border-shophover hover:text-shophover transition-all duration-300 border-[1px] border-border text-black rounded-5px p-2.5 outline-none cursor-pointer">
+            <span className="uppercase">Giày Nike</span>
+          </button>
+          <button className="hover:border-shophover hover:text-shophover transition-all duration-300 border-[1px] border-border text-black rounded-5px p-2.5 outline-none cursor-pointer">
+            <span className="uppercase">Giày Gucci</span>
           </button>
         </div>
       </div>
-    </>
+      <div>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5">
+          {productDiscountList.map((product) => {
+            return (
+              <div key={product.id} className=" w-full h-full bg-white p-2.5">
+                <div className="mb-4 h-[110px] relative overflow-hidden">
+                  <img
+                    width={260}
+                    height={260}
+                    src={product.imgA}
+                    alt={product.title.slice(-40)}
+                    className="object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  "
+                  />
+                  {/* <img src="" alt="" /> */}
+                </div>
+
+                <div className="">
+                  <p className="mb-4 line-clamp-2">{product.title}</p>
+                  <span className="text-red-600 text-[13px] font-medium">
+                    {product.priceProduct}
+                  </span>
+                  <span className="text-[13px] font-medium ml-3 line-through text-gray-500">
+                    {product.discountProduct}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <div className="md:mt-9 mt-3 flex items-center justify-center">
+        <button className="outline-none flex items-center bg-white hover:bg-black hover:text-white text-black transition duration-300 ease-in-out px-5 py-2.5 cursor-pointer rounded-5px">
+          <span className=" ">Xem tất cả</span>
+          <FaAnglesRight className=" ml-3" />
+        </button>
+      </div>
+    </div>
   );
 };
 

@@ -4,7 +4,6 @@ import Header from "./components/Layout/Header";
 import { FeaturedProducts } from "./components/Sections/FeaturedProducts";
 import HeroSection from "./components/Sections/HeroSection";
 import { NewsletterSection } from "./components/Sections/NewsletterSection";
-
 function App() {
   return (
     <div id="app">

@@ -11,7 +11,7 @@ import {
   FaUser,
   FaX,
 } from "react-icons/fa6";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const MenuSubAdidas: React.FC = () => {
   return (
@@ -331,11 +331,23 @@ export const HeaderTop: React.FC = () => {
       nameShop: "Lucky Card CN",
     },
   ];
+
   const [showUser, setShowUser] = useState(false);
   const [showLocation, setShowLocation] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [menu, setMenu] = useState(false);
+  const [shoes, setShoes] = useState("Bạn đang tìm kiếm gì... ?");
+  const shoesList = useMemo(
+    () => [
+      "Bạn đang tìm giày cho người yêu...",
+      "Bạn đang tìm giày cho ba mẹ...",
+      "Bạn đang tìm giày cho bản thân mình...",
+      "Bạn muốn giày đẹp và giá rẻ...",
+      "Ocean shop là lựa chọn hợp lý đối với bạn...",
+    ],
+    []
+  );
 
   const handleSearch = (): void => {
     setShowSearch(!showSearch);
@@ -368,6 +380,14 @@ export const HeaderTop: React.FC = () => {
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
   };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const numberRandom = Math.floor(Math.random() * shoesList.length);
+      setShoes(shoesList[numberRandom]);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [shoesList]);
   return (
     <div className="bg-bgheader">
       <Container>
@@ -427,7 +447,7 @@ export const HeaderTop: React.FC = () => {
           >
             <input
               type="text"
-              placeholder="Giày..."
+              placeholder={shoes}
               className=" w-full px-2.5 py-2.5 outline-hidden bg-transparent"
             />
 
@@ -452,7 +472,7 @@ export const HeaderTop: React.FC = () => {
 
                   <input
                     type="text"
-                    placeholder="Giày..."
+                    placeholder={shoes}
                     className="mt-3 w-full px-4 py-2.5 outline-hidden bg-content"
                   />
                 </div>
@@ -472,7 +492,7 @@ export const HeaderTop: React.FC = () => {
             </div>
 
             {showLocation && (
-              <div className="md:w-[433px] w-screen py-2.5 px-5 shadow-2xl bg-content text-black absolute top-10 left-[-291px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
+              <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-content text-black absolute top-10 left-[-291px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
                 <h1 className="text-[17px]  uppercase text-center font-semibold mb-2">
                   TÌM CỬA HÀNG GẦN BẠN
                 </h1>

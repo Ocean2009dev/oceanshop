@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
                   className="w-full placeholder:text-[#9c9c9c] text-black text-[14px] outline-none placeholder:text-[14px] py-3"
                 />
               </div>
-              <div className=" flex items-center  md:py-3 px-4 bg-[#111] uppercase text-[14px] ">
+              <div className=" flex items-center  py-3 px-4 bg-[#111] uppercase text-[14px] whitespace-nowrap ">
                 <FaArrowPointer className="mr-2" />
                 Đăng Ký
               </div>
