@@ -183,11 +183,11 @@ const Footer: React.FC = () => {
         </a>
         GitHub to
         <a
-          href="https://github.com/Poseidon-go"
+          href="https://github.com/Ocean2009dev"
           target="_blank"
           className="mx-2"
         >
-          Poseidon-go
+          Ocean-Github
         </a>
       </div>
     </footer>

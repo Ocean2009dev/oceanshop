@@ -313,7 +313,7 @@ export const CouponTable: React.FC = () => {
                       <span className="absolute top-[8px] right-[-87px] whitespace-nowrap transition-all duration-500 group-hover:opacity-100 group-hover:right-[31px] ">
                         Thêm vào giỏ
                       </span>
-                      <span className="inline-block transition-all duration-500 group-hover:pl-24">
+                      <span className="flex items-center justify-center transition-all duration-500 group-hover:pl-24">
                         <FaCartPlus className="text-white text-xl font-bold " />
                       </span>
                     </button>
@@ -494,6 +494,16 @@ export const Product: React.FC = () => {
                     alt={product.title.slice(-40)}
                     className="hidden group-hover:block object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  "
                   />
+                  <div className="absolute bottom-2 right-2 z-50">
+                    <button className="group/show flex relative justify-between items-center text-white bg-shophover rounded-[50px] p-3 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.7)] transition-all duration-500 overflow-hidden cursor-pointer">
+                      <span className="absolute top-[8px] right-[-87px] whitespace-nowrap transition-all duration-500 group-hover/show:opacity-100 group-hover/show:right-[31px] ">
+                        Thêm vào giỏ
+                      </span>
+                      <span className="flex items-center justify-center transition-all duration-500 group-hover/show:pl-24">
+                        <FaCartPlus className="text-white text-xl font-bold " />
+                      </span>
+                    </button>
+                  </div>
                 </div>
 
                 <div className="">

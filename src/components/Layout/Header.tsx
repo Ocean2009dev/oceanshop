@@ -457,7 +457,7 @@ export const HeaderTop: React.FC = () => {
           </form>
 
           {/* địa chỉ cửa hàng, đăng nhập và hiển thị số lượng giỏ hàng */}
-          <div className=" relative flex items-center justify-between text-white whitespace-nowrap cursor-pointer mr-2">
+          <div className=" relative flex items-center justify-between text-white whitespace-nowrap cursor-pointer mr-4">
             {/* tìm kiếm mobile */}
             <div className="block md:hidden" onClick={handleSearch}>
               <FaSistrix className="text-white w-6 h-6 font-extrabold" />
@@ -607,7 +607,12 @@ export const HeaderTop: React.FC = () => {
 
             {/* hiển thị số lượng giỏ hàng */}
             <div className="flex items-center ml-4" onClick={handleCart}>
-              <FaCartShopping className="w-6 h-6" />
+              <div className="relative">
+                <FaCartShopping className="w-6 h-6 " />
+                <div className="bg-white text-black text-[10px] font-bold absolute -top-2 left-4 w-5 h-5 rounded-[50px] flex items-center justify-center whitespace-nowrap overflow-hidden">
+                  20
+                </div>
+              </div>
               <div className="hidden md:block ml-4">Giỏ Hàng</div>
             </div>
             {showCart && (
