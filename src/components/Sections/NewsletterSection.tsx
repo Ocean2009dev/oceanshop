@@ -19,7 +19,7 @@ export const NewsletterSection: React.FC = () => {
         "Legit check : Hướng dẫn cách phân biệt Air Jordan 1 'Volt Gold' Real và Fake",
       describe:
         "Bạn đang cố gắng tìm hiểu cách phân biệt đôi Air Jordan 1 phối màu Volt Gold của Nike là thậ...",
-      date: "02/07/2022",
+      date: "02/07/2028",
     },
     {
       id: 2,
@@ -28,7 +28,7 @@ export const NewsletterSection: React.FC = () => {
       title: "Top 10 đôi giày thể thao cho nữ vào hè này",
       describe:
         "Một vẻ ngoài năng động, cùng phong cách trẻ trung luôn là sự lựa chọn hàng đầu của các bạn nữ trong các dịp lễ đặc bi...",
-      date: "02/07/2022",
+      date: "02/07/2028",
     },
     {
       id: 3,
@@ -37,17 +37,17 @@ export const NewsletterSection: React.FC = () => {
       title: "Top 10 đôi sneaker flop nhất lịch sử",
       describe:
         "Các bản collab thực sự là một cái gì đó đặc biệt. Ngay sau khi một đôi giày, thậm chí có thể là loại tầm thường ...",
-      date: "01/07/2022",
+      date: "01/07/2028",
     },
     {
       id: 4,
       bgPost:
         "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1754279968/newfd4_v7luue.jpg",
       title:
-        "NIKE, Inc. Reports Fiscal 2022 Fourth Quarter And Full Year Results",
+        "NIKE, Inc. Reports Fiscal 2028 Fourth Quarter And Full Year Results",
       describe:
-        "BEAVERTON, Ore., June 27, 2022 — NIKE, Inc. (NYSE:NKE) today reported financial results for its fiscal 2022 fourth qu...",
-      date: "01/07/2022",
+        "BEAVERTON, Ore., June 27, 2028 — NIKE, Inc. (NYSE:NKE) today reported financial results for its fiscal 2028 fourth qu...",
+      date: "01/07/2028",
     },
   ];
   return (
@@ -70,16 +70,18 @@ export const NewsletterSection: React.FC = () => {
                 height={174}
                 className="object-cover h-full"
               />
-              <div className="bg-[#fff] absolute left-[9px] top-[187px] w-[94%] p-3 shadow-xl">
-                <h1 className="text-[16px] text-[#000] font-semibold line-clamp-2">
-                  {title}
-                </h1>
-                <a
-                  href=""
-                  className="text-[14px] text-[#000] line-clamp-2 mb-2"
-                >
-                  {describe}
-                </a>
+              <div className="bg-[#fff] absolute left-[9px] top-[187px] w-[94%] h-[140px] p-3 shadow-xl">
+                <div className="h-[90px]">
+                  <h1 className="text-[16px] text-[#000] font-semibold line-clamp-2 min-h-[48px] ">
+                    {title}
+                  </h1>
+                  <a
+                    href=""
+                    className="text-[14px] text-[#000] line-clamp-2 mb-2"
+                  >
+                    {describe}
+                  </a>
+                </div>
                 <div className="flex justify-between pt-2 border-t-2 border-[#000]">
                   <div className="text-[#000] text-[12px] flex items-center">
                     <FaCalendarDays />

@@ -6,7 +6,7 @@ import HeroSection from "./components/Sections/HeroSection";
 import { NewsletterSection } from "./components/Sections/NewsletterSection";
 function App() {
   return (
-    <div id="app">
+    <div id="app group/app">
       <Header />
       <div className="bg-content">
         <Container>

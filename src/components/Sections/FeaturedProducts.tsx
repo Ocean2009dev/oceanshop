@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import CouponCarousel from "../Common/Carousel";
-import { FaAnglesRight } from "react-icons/fa6";
+import { FaAnglesRight, FaCartPlus } from "react-icons/fa6";
 
 // coupon
 export const CouponCard: React.FC = () => {
+  const [isCopy, setIsCopy] = useState<string | null>(null);
   interface CouponList {
     id?: number;
     ship?: string;
@@ -18,34 +19,41 @@ export const CouponCard: React.FC = () => {
       ship: "Miễn phí vận chuyển",
       priceOrder: "Đơn hàng từ 300k",
       price: "300k",
-      code: "SCOFIELD300K",
-      date: "HSD: 10/12/2022",
+      code: "OCEAN300K",
+      date: "HSD: 10/12/2028",
     },
     {
       id: 2,
       ship: "Giảm thêm 100k",
       priceOrder: "Đơn hàng từ 2 triệu",
       price: "100k",
-      code: "SCOFIELD100K",
-      date: "HSD: 10/12/2022",
+      code: "OCEAN100K",
+      date: "HSD: 10/12/2028",
     },
     {
       id: 3,
       ship: "Giảm thêm 15%",
       priceOrder: "Đơn hàng từ 5 triệu",
       price: "15%",
-      code: "SCOFIELD15",
-      date: "HSD: 10/12/2022",
+      code: "OCEAN15",
+      date: "HSD: 10/12/2028",
     },
     {
       id: 4,
       ship: "Giảm thêm 30%",
       priceOrder: "Đơn hàng từ 15 triệu",
       price: "30%",
-      code: "SCOFIELD30",
-      date: "HSD: 10/12/2022",
+      code: "OCEAN30",
+      date: "HSD: 10/12/2028",
     },
   ];
+
+  const handleCopyCode = (code: string | undefined): void => {
+    if (code) {
+      navigator.clipboard.writeText(code);
+      setIsCopy(code);
+    }
+  };
   return (
     <div className="md:grid md:grid-cols-4 gap-14 md:gap-1 pt-6 flex overflow-x-auto pb-2">
       {couponList.map((coupon) => (
@@ -68,7 +76,7 @@ export const CouponCard: React.FC = () => {
                 {coupon.priceOrder}
               </small>
             </div>
-            <div className="w-full flex items-center justify-between mt-2 overflow-hidden">
+            <div className="w-full flex items-center justify-between mt-2 ">
               <div className="flex-1 whitespace-nowrap">
                 <span className="text-[11px] block">
                   mã:
@@ -80,9 +88,13 @@ export const CouponCard: React.FC = () => {
                   {coupon.date}
                 </span>
               </div>
-              <div className="ml-1">
-                <button className="px-3 py-1 bg-black hover:bg-red-600 text-white rounded-[50px] text-[10px] cursor-pointer flex-shrink-0 whitespace-nowrap">
-                  sao chép
+              <div className="ml-1" onClick={() => handleCopyCode(coupon.code)}>
+                <button
+                  className={`${
+                    isCopy === coupon.code ? "bg-red-600" : "bg-black"
+                  } px-3 py-1 bg-black hover:bg-red-600 text-white rounded-[50px] text-[10px] cursor-pointer flex-shrink-0 whitespace-nowrap`}
+                >
+                  {isCopy === coupon.code ? "Đã sao chép" : "sao chép"}
                 </button>
               </div>
             </div>
@@ -268,9 +280,9 @@ export const CouponTable: React.FC = () => {
             return (
               <div
                 key={productDiscount.id}
-                className="bg-white h-full mx-3 p-2 rounded-5px cursor-pointer "
+                className="bg-white h-full mx-3 p-2 rounded-5px cursor-pointer"
               >
-                <div className="relative overflow-hidden">
+                <div className="relative overflow-hidden group/img ">
                   <img
                     width={260}
                     height={260}
@@ -285,8 +297,27 @@ export const CouponTable: React.FC = () => {
                       1,
                       productDiscount.title.length - 44
                     )}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 "
+                    className="group--hover/img:hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0  transition-all ease-in-out duration-700 delay-700"
                   />
+
+                  <img
+                    src={productDiscount.imgB}
+                    alt={productDiscount.title.slice(
+                      1,
+                      productDiscount.title.length - 44
+                    )}
+                    className="hidden group-hover/img:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 transition-all ease-in-out duration-700 delay-700"
+                  />
+                  <div className="absolute bottom-2 right-2 z-50">
+                    <button className="group flex relative justify-between items-center text-white bg-shophover rounded-[50px] p-3 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.7)] transition-all duration-500 overflow-hidden cursor-pointer">
+                      <span className="absolute top-[8px] right-[-87px] whitespace-nowrap transition-all duration-500 group-hover:opacity-100 group-hover:right-[31px] ">
+                        Thêm vào giỏ
+                      </span>
+                      <span className="inline-block transition-all duration-500 group-hover:pl-24">
+                        <FaCartPlus className="text-white text-xl font-bold " />
+                      </span>
+                    </button>
+                  </div>
                 </div>
 
                 <h3 className="text-[14px] font-medium line-clamp-2 mt-2">
@@ -444,16 +475,25 @@ export const Product: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5">
           {productDiscountList.map((product) => {
             return (
-              <div key={product.id} className=" w-full h-full bg-white p-2.5">
-                <div className="mb-4 h-[110px] relative overflow-hidden">
+              <div
+                key={product.id}
+                className=" w-full h-full bg-white p-2.5 cursor-pointer"
+              >
+                <div className="mb-4 h-[220px] relative overflow-hidden group ">
                   <img
                     width={260}
                     height={260}
                     src={product.imgA}
                     alt={product.title.slice(-40)}
-                    className="object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  "
+                    className="group-hover:hidden object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  "
                   />
-                  {/* <img src="" alt="" /> */}
+                  <img
+                    width={260}
+                    height={260}
+                    src={product.imgB}
+                    alt={product.title.slice(-40)}
+                    className="hidden group-hover:block object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  "
+                  />
                 </div>
 
                 <div className="">

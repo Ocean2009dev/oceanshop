@@ -81,8 +81,8 @@ const Footer: React.FC = () => {
                   <span className="text-[17px] font-semibold">GIỚI THIỆU</span>
                   <ul className="pt-2">
                     <li className="text-[14px] py-1 text-wrap font-semibold">
-                      Wd Shoes Scofield chuyên cung cấp các loại giày authentic
-                      với giá cả ưu đãi nhất thị trường
+                      OceanShop chuyên cung cấp các loại giày authentic với giá
+                      cả ưu đãi nhất thị trường
                     </li>
                     <li className="flex items-center ">
                       <FaLocationDot className="font-semibold mr-1" />
