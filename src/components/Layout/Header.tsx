@@ -12,6 +12,7 @@ import {
   FaX,
 } from "react-icons/fa6";
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
 export const MenuSubAdidas: React.FC = () => {
   return (
@@ -23,7 +24,7 @@ export const MenuSubAdidas: React.FC = () => {
         </div>
 
         {/* Khu vực hiển thị submenu bên phải */}
-        <div className="w-[70%] h-full group-hover/adidas:block hidden absolute top-2 left-99 after:absolute after:top-[-16px] after:left-[-31px] after:content-[''] after:block  after:w-10 after:h-full">
+        <div className="w-[70%] h-full group-hover/adidas:block hidden absolute top-2 left-117 after:absolute after:top-[-16px] after:left-[-31px] after:content-[''] after:block  after:w-10 after:h-full">
           <div className="grid grid-cols-4">
             <div>
               <h4 className="font-bold text-gray-700 mb-3">Adidas Original</h4>
@@ -187,7 +188,7 @@ export const MenuSubNike: React.FC = () => {
           <FaAngleRight />
         </div>
 
-        <div className="w-[70%] h-full group-hover/nike:block hidden absolute top-2 left-99 after:absolute after:top-[-16px] after:left-[-31px] after:content-[''] after:block  after:w-10 after:h-full">
+        <div className="w-[70%] h-full group-hover/nike:block hidden absolute top-2 left-117 after:absolute after:top-[-16px] after:left-[-31px] after:content-[''] after:block  after:w-10 after:h-full">
           <div className="grid grid-cols-4">
             <h4 className="font-bold text-gray-700 mb-3">Nike Air</h4>
             <h4 className="font-bold text-gray-700 mb-3">Jondan mid</h4>
@@ -243,13 +244,13 @@ export const Nav: React.FC = () => {
         <nav className="relative">
           <ul className="flex items-center justify-around text-[16px] font-medium">
             <li className="py-2.5 px-8 cursor-pointer hover:text-shophover transition-all delay-75 duration-150 ease-in-out">
-              <a href="">Trang Chủ</a>
+              <Link to="/">Trang Chủ</Link>
             </li>
             <li className=" group/item py-2.5 px-8 hover:text-shophover  transition-all delay-75 duration-150 ease-in-out cursor-pointer">
               <div className="flex items-center  ">
-                <a href="" className="mr-2 ">
+                <Link to="/sneaker" className="mr-2 ">
                   Giày Sneaker
-                </a>
+                </Link>
                 <FaAngleDown />
               </div>
 
@@ -257,12 +258,14 @@ export const Nav: React.FC = () => {
               <MenuSubSneaker />
             </li>
             <li className="py-2.5 px-8 cursor-pointer hover:text-shophover transition-all delay-75 duration-150 ease-in-out">
-              <a href="">Liên Hệ</a>
+              <Link to="/contact" className="mr-2 ">
+                Liên hệ
+              </Link>
             </li>
             <li className="py-2.5 px-8 flex items-center cursor-pointer hover:text-shophover transition-all delay-75 duration-150 ease-in-out">
-              <a href="" className="mr-2">
+              <Link to="/features" className="mr-2 ">
                 Tính Năng
-              </a>
+              </Link>
               <FaAngleDown />
             </li>
           </ul>
@@ -412,23 +415,31 @@ export const HeaderTop: React.FC = () => {
               <div className="mt-6">
                 <ul className="text-[16px] font-medium">
                   <li className="py-2.5  cursor-pointer hover:text-shophover transition-all delay-75 duration-150 ease-in-out">
-                    <a href="/">Trang Chủ</a>
+                    <Link to="/" onClick={handleModal}>
+                      Trang Chủ
+                    </Link>
                   </li>
                   <li className=" group/item py-2.5  hover:text-shophover  transition-all delay-75 duration-150 ease-in-out cursor-pointer">
                     <div className="flex items-center  ">
-                      <a href="" className="mr-2 ">
+                      <Link
+                        to="/sneaker"
+                        className="mr-2"
+                        onClick={handleModal}
+                      >
                         Giày Sneaker
-                      </a>
+                      </Link>
                       <FaAngleDown />
                     </div>
                   </li>
                   <li className="py-2.5  cursor-pointer hover:text-shophover transition-all delay-75 duration-150 ease-in-out">
-                    <a href="">Liên Hệ</a>
+                    <Link to="/contact" className="mr-2" onClick={handleModal}>
+                      Liên hệ
+                    </Link>
                   </li>
                   <li className="py-2.5  flex items-center cursor-pointer hover:text-shophover transition-all delay-75 duration-150 ease-in-out">
-                    <a href="" className="mr-2">
-                      Tính Năng
-                    </a>
+                    <Link to="/features" className="mr-2" onClick={handleModal}>
+                      Tính năng
+                    </Link>
                     <FaAngleDown />
                   </li>
                 </ul>
