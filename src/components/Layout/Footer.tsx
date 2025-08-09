@@ -5,7 +5,7 @@ import Container from "./Container";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-bgheader w-full text-white">
+    <footer className=" bg-bgheader w-full text-white">
       <Container>
         <div className=" cursor-pointer p-3 md:p-0">
           <div className="py-1  md:py-4 flex flex-col md:flex-row items-center md:justify-between border-b-2 border-b-white ">

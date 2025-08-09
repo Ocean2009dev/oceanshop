@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa6";
 
 interface FilterGroupProps {
+  className?: string;
   title?: string;
   borderTop?: boolean;
   options?: string[];
@@ -10,6 +11,7 @@ interface FilterGroupProps {
 }
 
 export const FilterGroup: React.FC<FilterGroupProps> = ({
+  className,
   title = "",
   options = [],
   onSelect,
@@ -21,45 +23,50 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
     setIsDownMenu(!isDownMenu);
   };
   return (
-    <div className="mb-6 bg-white p-4">
-      <div className="flex items-center justify-between mb-3 ">
-        <h3 className="font-semibold ">{title}</h3>
+    <div className={`${className} bg-white  rounded-lg overflow-hidden`}>
+      <div
+        className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+        onClick={handleShowMenu}
+      >
+        <h3 className="font-semibold text-gray-800">{title}</h3>
         {isDownMenu ? (
-          <FaAngleUp className="cursor-pointer" onClick={handleShowMenu} />
+          <FaAngleUp className="text-gray-600" />
         ) : (
-          <FaAngleDown className="cursor-pointer" onClick={handleShowMenu} />
+          <FaAngleDown className="text-gray-600" />
         )}
       </div>
 
-      <ul
-        className={`flex-col ${
-          borderTop ? "border-t-1 border-t-gray-200" : ""
-        }  space-y-2  transition-all delay-500 duration-500 ease-in-out pt-3   ${
-          isDownMenu
-            ? "opacity-0 -translate-y-2 max-h-0"
-            : "opacity-100 translate-y-0 max-h-[500px]"
+      <div
+        className={`transition-all duration-300 ease-in-out p-4 ${
+          isDownMenu ? "max-h-0 opacity-0" : "max-h-96 opacity-100"
         } overflow-hidden`}
       >
-        {options.map((opt, index) => (
-          <li key={opt} className="flex items-center justify-between">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                value={opt}
-                onChange={() => onSelect?.(opt)}
-                className="accent-black"
-              />
-              <span>{opt}</span>
-            </label>
+        <ul
+          className={`flex flex-col space-y-3  max-h-[200px] overflow-y-auto pt-3 ${
+            borderTop ? "border-t border-gray-200" : ""
+          }`}
+        >
+          {options.map((opt, index) => (
+            <li key={opt} className="flex items-center justify-between">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  value={opt}
+                  onChange={() => onSelect?.(opt)}
+                  className="accent-black"
+                />
+                <span>{opt}</span>
+              </label>
 
-            <label className="gap-2 cursor-pointer">
-              <span>
-                {valueOptions[index] ? `${valueOptions[index]}` : null}
-              </span>
-            </label>
-          </li>
-        ))}
-      </ul>
+              <label className="gap-2 cursor-pointer">
+                <span>
+                  {valueOptions[index] ? `${valueOptions[index]}` : null}
+                </span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
