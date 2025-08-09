@@ -13,8 +13,8 @@ function App() {
           <Outlet />
         </Container>
       </div>
-      <Footer />
       <ScrollToTop />
+      <Footer />
     </div>
   );
 }
