@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CouponCarousel from "../Common/Carousel";
 import { FaAnglesRight, FaCartPlus } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 // coupon
 export const CouponCard: React.FC = () => {
@@ -340,7 +341,7 @@ export const CouponTable: React.FC = () => {
 
       <div className="md:mt-9 mt-3 flex items-center justify-center">
         <button className="outline-none flex items-center bg-white hover:bg-black hover:text-white text-black transition duration-300 ease-in-out px-5 py-2.5 cursor-pointer rounded-5px">
-          <span className=" ">Xem tất cả</span>
+          <Link to={"/sneaker"}>Xem tất cả</Link>
           <FaAnglesRight className=" ml-3" />
         </button>
       </div>
@@ -522,7 +523,7 @@ export const Product: React.FC = () => {
       </div>
       <div className="md:mt-9 mt-3 flex items-center justify-center">
         <button className="outline-none flex items-center bg-white hover:bg-black hover:text-white text-black transition duration-300 ease-in-out px-5 py-2.5 cursor-pointer rounded-5px">
-          <span className=" ">Xem tất cả</span>
+          <Link to={"/sneaker"}>Xem tất cả</Link>
           <FaAnglesRight className=" ml-3" />
         </button>
       </div>
