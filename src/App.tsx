@@ -1,4 +1,5 @@
 import { ScrollToTop } from "./components/Common/ScrollToTop";
+import { ScrollOnRouteChange } from "./components/Common/ScrollToTopOnRouteChange";
 import Container from "./components/Layout/Container";
 import Footer from "./components/Layout/Footer";
 import Header from "./components/Layout/Header";
@@ -15,6 +16,7 @@ function App() {
       </div>
       <Footer />
       <ScrollToTop />
+      <ScrollOnRouteChange />
     </div>
   );
 }
