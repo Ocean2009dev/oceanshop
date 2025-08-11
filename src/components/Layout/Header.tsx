@@ -391,6 +391,7 @@ export const HeaderTop: React.FC = () => {
     }, 3000);
     return () => clearInterval(timer);
   }, [shoesList]);
+
   return (
     <div className="bg-bgheader">
       <Container>
@@ -621,7 +622,7 @@ export const HeaderTop: React.FC = () => {
               <div className="relative">
                 <FaCartShopping className="w-6 h-6 " />
                 <div className="bg-white text-black text-[10px] font-bold absolute -top-2 left-4 w-5 h-5 rounded-[50px] flex items-center justify-center whitespace-nowrap overflow-hidden">
-                  20
+                  {Number(localStorage.getItem("product")) || 0}
                 </div>
               </div>
               <div className="hidden md:block ml-4">Giỏ Hàng</div>
@@ -672,10 +673,10 @@ export const HeaderTop: React.FC = () => {
 
 const Header: React.FC = () => {
   return (
-    <>
+    <div className="fixed top-0 right-0 w-full z-999999999999">
       <HeaderTop />
       <Nav />
-    </>
+    </div>
   );
 };
 

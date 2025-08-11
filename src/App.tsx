@@ -9,7 +9,7 @@ function App() {
   return (
     <div id="app" className="relative">
       <Header />
-      <div className="bg-content">
+      <div className="bg-content mt-12 md:mt-28">
         <Container>
           <Outlet />
         </Container>
