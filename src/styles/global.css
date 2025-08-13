@@ -3,6 +3,11 @@
 /* Custom theme configuration */
 @theme {
     /* color */
+    /* color animations */
+    --color-sky-custom: rgba(0, 180, 255, 0.2);
+
+    /* Login */
+    --color-bgLogin: #D2E1ED;
     /* Header Colors */
     --color-content: #F5F5F5;
     --color-bgheader: #202020;
@@ -64,20 +69,29 @@
         }
     }
 
-    @keyframes flicker {
 
-        0%,
-        100% {
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+    /* Keyframes cho mây */
+    @keyframes cloud {
+        0% {
+            margin-left: -1000px;
         }
 
-        50% {
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.9);
+        100% {
+            margin-left: 100%;
         }
     }
 
+    /* Animation tốc độ khác nhau */
+    --animate-cloud-35: cloud 35s linear infinite;
+    --animate-cloud-20: cloud 20s linear infinite;
+    --animate-cloud-30: cloud 30s linear infinite;
+    --animate-cloud-18: cloud 18s linear infinite;
+    --animate-cloud-25: cloud 25s linear infinite;
+
 
 }
+
+
 
 /* Base styles */
 @layer base {

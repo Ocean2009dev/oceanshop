@@ -8,6 +8,7 @@ import Sneaker from "./pages/Sneaker.tsx";
 import Home from "./pages/Home.tsx";
 import Contact from "./pages/Contact.tsx";
 import Features from "./pages/Features.tsx";
+import { SignIn, SignUp } from "./pages/Login.tsx";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,14 @@ const router = createBrowserRouter([
       {
         path: "/features",
         element: <Features />,
+      },
+      {
+        path: "/signup",
+        element: <SignUp />,
+      },
+      {
+        path: "/signin",
+        element: <SignIn />,
       },
     ],
   },

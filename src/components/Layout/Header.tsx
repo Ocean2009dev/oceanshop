@@ -607,7 +607,9 @@ export const HeaderTop: React.FC = () => {
                 <div>
                   <p className="mb-3">
                     <span>Khách hàng tạo mới? </span>
-                    <a href="">Tạo tài khoản</a>
+                    <Link to={"/signup"} onClick={handleLogin}>
+                      Tạo tài khoản
+                    </Link>
                   </p>
                   <p>
                     <span>Quên mật khẩu? </span>
