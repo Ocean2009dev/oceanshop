@@ -476,7 +476,7 @@ export const HeaderTop: React.FC = () => {
             </div>
 
             {showSearch && (
-              <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-white text-black absolute top-10 left-[-291px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
+              <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-white text-black absolute top-10 left-[-284px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
                 <div className="text-center pb-6 ">
                   <h1 className="text-center text-xl font-semibold uppercase border-b-2 border-b-[#ddd] pb-3 ">
                     Tìm kiếm
@@ -504,7 +504,7 @@ export const HeaderTop: React.FC = () => {
             </div>
 
             {showLocation && (
-              <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-content text-black absolute top-10 left-[-291px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
+              <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-content text-black absolute top-10 left-[-284px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
                 <h1 className="text-[17px]  uppercase text-center font-semibold mb-2">
                   TÌM CỬA HÀNG GẦN BẠN
                 </h1>
@@ -575,7 +575,7 @@ export const HeaderTop: React.FC = () => {
             </div>
 
             {showUser && (
-              <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-white text-black absolute top-10 left-[-291px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
+              <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-white text-black absolute top-10 left-[-284px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
                 <h1 className="text-center font-semibold  uppercase ">
                   Đăng Nhập tài khoản
                 </h1>
@@ -630,7 +630,7 @@ export const HeaderTop: React.FC = () => {
               <div className="hidden md:block ml-4">Giỏ Hàng</div>
             </div>
             {showCart && (
-              <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-white text-black absolute top-10 left-[-291px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
+              <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-white text-black absolute top-10 left-[-284px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
                 <div className="text-center pb-6 border-b-2 border-b-[#ddd]">
                   <h1 className="text-center font-semibold uppercase ">
                     Giỏ hàng
