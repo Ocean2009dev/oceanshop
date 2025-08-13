@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Link } from "react-router-dom";
 import type React from "react";
 import { FaReply } from "react-icons/fa6";
@@ -11,6 +10,7 @@ import {
 
 export const SignIn: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     console.log("Login submitted");
     // Add your login logic here
   };
@@ -39,6 +39,8 @@ export const SignIn: React.FC = () => {
 };
 export const SignUp: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
     console.log("Signup submitted");
     // Add your signup logic here
   };
