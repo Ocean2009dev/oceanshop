@@ -178,7 +178,6 @@ export default function Sneaker() {
   const [isCloseFilter, setIsCloseFilter] = useState(false);
 
   const handleCloseFilter = (): void => {
-    console.log("Đóng");
     setIsCloseFilter(!isCloseFilter);
   };
   return (
@@ -271,7 +270,7 @@ export default function Sneaker() {
 
                   <div>
                     <div
-                      className={`bg-white fixed  top-0 bottom-0 right-0 w-full h-full z-1000 p-4 transition-all delay-300 duration-300 ease-in-out  
+                      className={`bg-white fixed  top-0 bottom-0 right-0 w-full h-full z-1000000000000 p-4 transition-all delay-300 duration-300 ease-in-out  
                       ${
                         isCloseFilter
                           ? "translate-x-0 opacity-100"

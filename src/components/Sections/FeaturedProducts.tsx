@@ -3,7 +3,17 @@ import CouponCarousel from "../Common/Carousel";
 import { FaAnglesRight, FaCartPlus } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { AddToCart } from "../Common/Card";
+import { productAPI } from "../../api/product";
 
+interface ProductDiscountList {
+  id?: number;
+  title: string;
+  brand?: string;
+  priceProduct: string;
+  discountProduct: string;
+  imgA: string;
+  imgB: string;
+}
 // coupon
 export const CouponCard: React.FC = () => {
   const [isCopy, setIsCopy] = useState<string | null>(null);
@@ -108,105 +118,62 @@ export const CouponCard: React.FC = () => {
 };
 
 export const CouponTable: React.FC = () => {
-  interface ProductDiscountList {
-    id?: number;
-    title: string;
-    priceProduct: string;
-    discountProduct: string;
-    imgA: string;
-    imgB: string;
-  }
-  const productDiscountList: ProductDiscountList[] = [
-    {
-      id: 1,
-      title: " Giày Nike Jordan 1 Retro High OG SP 'Utility Stash' DN4336-001 ",
-      priceProduct: "7,929,900₫",
-      discountProduct: "8,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876731/shoe1a_pj9stt.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe1b_rtpmwz.webp",
-    },
-    {
-      id: 2,
-      title: "  Giày Nike Air Jordan 1 Mid GS 'White Shadow' 554725-073  ",
-      priceProduct: "7,573,500₫",
-      discountProduct: "8,500,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876731/shoe2a_t85m61.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe2b_bzamfq.png",
-    },
-    {
-      id: 3,
-      title: "  Giày Nike Jordan 1 Retro Golf 'Starfish' DD9315-800  ",
-      priceProduct: "6,147,900₫",
-      discountProduct: "6,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876733/shoe3a_drpxsn.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876737/shoe3b_fdqojy.png",
-    },
-    {
-      id: 4,
-      title: "  Giày Nike Jordan 1 High OG 'Denim' DM9036-104  ",
-      priceProduct: "6,147,900₫",
-      discountProduct: "6,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe4a_rb0b31.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe4b_q7rsz5.png",
-    },
-    {
-      id: 5,
-      title: "  Giày Nike Air Jordan 1 Retro High OG 'Volt' 555088-702  ",
-      priceProduct: "6,147,900₫",
-      discountProduct: "6,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe5a_ctdruv.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876733/shoe5b_xi6c2a.png",
-    },
-    {
-      id: 6,
-      title: "  Giày Nike Jordan 1 Mid 'Light Smoke Grey' 554725-078  ",
-      priceProduct: "5,524,200₫",
-      discountProduct: "6,200,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876733/shoe6a_edwarv.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe6b_uvyiw8.webp",
-    },
-    {
-      id: 7,
-      title: " Giày Nike Wmns Air Jordan 1 Mid 'Shadow' BQ6472-007 ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876740/shoe7a_umcsyd.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876740/shoe7b_yixw9d.png",
-    },
-    {
-      id: 8,
-      title: "Giày Nike Wmns Air Jordan 1 Mid 'Particle Grey' DO7139-002  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876741/shoe8a_xyijxv.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876739/shoe8b_r7wpcj.png",
-    },
-    {
-      id: 9,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Siren Red' DC0774-060",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876739/shoe9a_tqcd2t.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876739/shoe9b_rky2mk.png",
-    },
-    {
-      id: 10,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
-    },
-  ];
-
+  const [productDiscountList, setProductDiscountList] = useState<
+    ProductDiscountList[]
+  >([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  // Timer
   const [day, setDay] = useState(0);
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
   const [second, setSecond] = useState(0);
+  // Tách fetchProducts ra ngoài để có thể gọi lại
+  const fetchProducts = async (brand: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      console.log("Fetching products..."); // Debug log
+
+      const data = await productAPI(brand);
+      console.log("Products received:", data); // Debug log
+
+      setProductDiscountList(data.data);
+    } catch (err) {
+      console.error("Failed to fetch products:", err);
+
+      // Fallback data khi API fail (CORS hoặc server down)
+      const fallbackData = [
+        {
+          id: 1,
+          title:
+            "Giày Nike Jordan 1 Retro High OG SP 'Utility Stash' DN4336-001",
+          priceProduct: "7,929,900₫",
+          discountProduct: "8,900,000₫",
+          imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876731/shoe1a_pj9stt.png",
+          imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe1b_rtpmwz.webp",
+        },
+        {
+          id: 2,
+          title: "Giày Nike Air Jordan 1 Mid GS 'White Shadow' 554725-073",
+          priceProduct: "7,573,500₫",
+          discountProduct: "8,500,000₫",
+          imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876731/shoe2a_t85m61.webp",
+          imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe2b_bzamfq.png",
+        },
+      ];
+
+      setProductDiscountList(fallbackData);
+      setError("⚠️ CORS Error: Lỗi Hiển thị dữ liệu mẫu.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
+    fetchProducts("nike");
     let totalSeconds = 10800; // 3 tiếng
-
+    // call api
     const timer = setInterval(() => {
       const days = Math.floor(totalSeconds / (3600 * 24));
       const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
@@ -227,6 +194,39 @@ export const CouponTable: React.FC = () => {
 
     return () => clearInterval(timer);
   }, []);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="mt-6 mb-6">
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
+            <p>Đang tải ...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="mt-6 mb-6">
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center">
+            <p className="text-red-500 mb-4">{error}</p>
+            <button
+              onClick={() => fetchProducts("")}
+              className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 cursor-pointer"
+            >
+              Thử lại
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-6 p-4 rounded-xl bg-red-600">
@@ -357,116 +357,172 @@ export const Coupon: React.FC = () => {
 };
 
 export const Product: React.FC = () => {
-  interface ProductDiscountList {
-    id?: number;
-    title: string;
-    priceProduct: string;
-    discountProduct: string;
-    imgA: string;
-    imgB: string;
+  const [productDiscountList, setProductDiscountList] = useState<
+    ProductDiscountList[]
+  >([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [brand, setBrand] = useState<string>("");
+  const [cache, setCache] = useState<Record<string, ProductDiscountList[]>>({});
+
+  // Tách fetchProducts ra ngoài để có thể gọi lại
+  const fetchProducts = async (brand: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      console.log("Fetching products..."); // Debug log
+
+      const data = await productAPI(brand);
+      console.log("Products received:", data); // Debug log
+
+      // Backend trả về {data: [...]} nên cần extract
+      const products = data.data || data;
+
+      if (products && Array.isArray(products)) {
+        setProductDiscountList(products);
+        // Lưu vào cache
+        setCache((prev) => ({
+          ...prev,
+          [brand]: products,
+        }));
+      } else {
+        console.warn("API returned invalid data:", data);
+        setError("Dữ liệu không hợp lệ");
+      }
+    } catch (err) {
+      console.error("Failed to fetch products:", err);
+
+      // Fallback data khi API fail (CORS hoặc server down)
+      const fallbackData = [
+        {
+          id: 1,
+          title:
+            "Giày Nike Jordan 1 Retro High OG SP 'Utility Stash' DN4336-001",
+          priceProduct: "7,929,900₫",
+          discountProduct: "8,900,000₫",
+          imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876731/shoe1a_pj9stt.png",
+          imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe1b_rtpmwz.webp",
+        },
+        {
+          id: 2,
+          title: "Giày Nike Air Jordan 1 Mid GS 'White Shadow' 554725-073",
+          priceProduct: "7,573,500₫",
+          discountProduct: "8,500,000₫",
+          imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876731/shoe2a_t85m61.webp",
+          imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe2b_bzamfq.png",
+        },
+      ];
+
+      setProductDiscountList(fallbackData);
+      setError("⚠️ CORS Error: Lỗi Hiển thị dữ liệu mẫu.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // call api
+  useEffect(() => {
+    fetchProducts("");
+  }, []);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="mt-6 mb-6">
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
+            <p>Đang tải ...</p>
+          </div>
+        </div>
+      </div>
+    );
   }
-  const productDiscountList: ProductDiscountList[] = [
-    {
-      id: 1,
-      title: " Giày Nike Jordan 1 Retro High OG SP 'Utility Stash' DN4336-001 ",
-      priceProduct: "7,929,900₫",
-      discountProduct: "8,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876731/shoe1a_pj9stt.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe1b_rtpmwz.webp",
-    },
-    {
-      id: 2,
-      title: "  Giày Nike Air Jordan 1 Mid GS 'White Shadow' 554725-073  ",
-      priceProduct: "7,573,500₫",
-      discountProduct: "8,500,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876731/shoe2a_t85m61.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe2b_bzamfq.png",
-    },
-    {
-      id: 3,
-      title: "  Giày Nike Jordan 1 Retro Golf 'Starfish' DD9315-800  ",
-      priceProduct: "6,147,900₫",
-      discountProduct: "6,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876733/shoe3a_drpxsn.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876737/shoe3b_fdqojy.png",
-    },
-    {
-      id: 4,
-      title: "  Giày Nike Jordan 1 High OG 'Denim' DM9036-104  ",
-      priceProduct: "6,147,900₫",
-      discountProduct: "6,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe4a_rb0b31.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe4b_q7rsz5.png",
-    },
-    {
-      id: 5,
-      title: "  Giày Nike Air Jordan 1 Retro High OG 'Volt' 555088-702  ",
-      priceProduct: "6,147,900₫",
-      discountProduct: "6,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe5a_ctdruv.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876733/shoe5b_xi6c2a.png",
-    },
-    {
-      id: 6,
-      title: "  Giày Nike Jordan 1 Mid 'Light Smoke Grey' 554725-078  ",
-      priceProduct: "5,524,200₫",
-      discountProduct: "6,200,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876733/shoe6a_edwarv.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe6b_uvyiw8.webp",
-    },
-    {
-      id: 7,
-      title: " Giày Nike Wmns Air Jordan 1 Mid 'Shadow' BQ6472-007 ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876740/shoe7a_umcsyd.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876740/shoe7b_yixw9d.png",
-    },
-    {
-      id: 8,
-      title: "Giày Nike Wmns Air Jordan 1 Mid 'Particle Grey' DO7139-002  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876741/shoe8a_xyijxv.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876739/shoe8b_r7wpcj.png",
-    },
-    {
-      id: 9,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Siren Red' DC0774-060",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876739/shoe9a_tqcd2t.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876739/shoe9b_rky2mk.png",
-    },
-    {
-      id: 10,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
-    },
-  ];
+
+  // Error state
+  if (error) {
+    return (
+      <div className="mt-6 mb-6">
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center">
+            <p className="text-red-500 mb-4">{error}</p>
+            <button
+              onClick={() => fetchProducts("")}
+              className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 cursor-pointer"
+            >
+              Thử lại
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const handleClick = async (selectedBrand: string) => {
+    console.log("Click button có brand:", selectedBrand);
+
+    // Nếu click vào button đang active thì không làm gì
+    if (selectedBrand === brand) {
+      console.log("Button đã active, không gọi API");
+      return;
+    }
+
+    setBrand(selectedBrand);
+
+    // Kiểm tra cache trước khi gọi API
+    if (cache[selectedBrand]) {
+      console.log("Sử dụng data từ cache cho brand:", selectedBrand);
+      setProductDiscountList(cache[selectedBrand]);
+      return;
+    }
+
+    // Gọi API nếu chưa có trong cache
+    await fetchProducts(selectedBrand);
+  };
+
   return (
     <div className="mt-6 mb-6">
       <div className="flex md:items-center md:justify-between flex-col md:flex-row mb-6">
         <h1 className="text-2xl font-semibold uppercase mb-3">giày sneaker</h1>
 
+        {/* Filter KM giày */}
         <div className="flex gap-2.5">
-          <button className="border-[1px] bg-shophover text-white rounded-5px p-2.5 outline-none cursor-pointer">
+          <button
+            onClick={() => handleClick("")}
+            className={`${
+              brand === ""
+                ? "bg-shophover text-white border-shophover"
+                : "text-black bg-transparent border-border hover:border-shophover hover:text-shophover"
+            } border-[1px] rounded-5px p-2.5 outline-none cursor-pointer transition-all duration-300`}
+          >
+            <span className="uppercase">Tất cả</span>
+          </button>
+          <button
+            onClick={() => handleClick("adidas")}
+            className={`${
+              brand === "adidas"
+                ? "bg-shophover text-white border-shophover"
+                : "text-black bg-transparent border-border hover:border-shophover hover:text-shophover"
+            } border-[1px] rounded-5px p-2.5 outline-none cursor-pointer transition-all duration-300`}
+          >
             <span className="uppercase">Giày Adidas</span>
           </button>
-          <button className="hover:border-shophover hover:text-shophover transition-all duration-300 border-[1px] border-border text-black rounded-5px p-2.5 outline-none cursor-pointer">
+          <button
+            onClick={() => handleClick("nike")}
+            className={`${
+              brand === "nike"
+                ? "bg-shophover text-white border-shophover"
+                : "text-black bg-transparent border-border hover:border-shophover hover:text-shophover"
+            } border-[1px] rounded-5px p-2.5 outline-none cursor-pointer transition-all duration-300`}
+          >
             <span className="uppercase">Giày Nike</span>
-          </button>
-          <button className="hover:border-shophover hover:text-shophover transition-all duration-300 border-[1px] border-border text-black rounded-5px p-2.5 outline-none cursor-pointer">
-            <span className="uppercase">Giày Gucci</span>
           </button>
         </div>
       </div>
       <div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5">
           {productDiscountList.map((product) => {
+            console.log(product);
             return (
               <div
                 key={product.id}

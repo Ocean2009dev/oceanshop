@@ -3,6 +3,7 @@ import { ScrollOnRouteChange } from "./components/Common/ScrollToTopOnRouteChang
 import Footer from "./components/Layout/Footer";
 import Header from "./components/Layout/Header";
 import { Outlet } from "react-router-dom";
+import { SalesToast } from "./UI/SalesToast";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Footer />
       <ScrollToTop />
       <ScrollOnRouteChange />
+      <SalesToast />
     </div>
   );
 }
