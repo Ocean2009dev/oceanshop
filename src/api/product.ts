@@ -17,7 +17,6 @@ export const productAPI = async (brand: string | null = null) => {
         }
 
         const data = await response.json();
-        console.log("API Response:", data); // Debug log
         return data;
     } catch (error) {
         console.error("API Error:", error);

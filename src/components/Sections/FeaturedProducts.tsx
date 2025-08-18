@@ -133,10 +133,8 @@ export const CouponTable: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      console.log("Fetching products..."); // Debug log
 
       const data = await productAPI(brand);
-      console.log("Products received:", data); // Debug log
 
       setProductDiscountList(data.data);
     } catch (err) {
@@ -198,7 +196,7 @@ export const CouponTable: React.FC = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="mt-6 mb-6">
+      <div className="fixed top-0 left-0 right-0 z-auto w-screen h-screen  flex justify-center items-center">
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
@@ -276,60 +274,66 @@ export const CouponTable: React.FC = () => {
       </div>
 
       {/* các hàng giày khuyến mãi */}
-      <div className="mt-3">
-        <CouponCarousel perViewDesktop={5} perViewMobile={2} autoSlide={false}>
-          {productDiscountList.map((productDiscount) => {
-            return (
-              <div
-                key={productDiscount.id}
-                className="bg-white h-full mx-3 p-2 rounded-5px cursor-pointer"
-              >
-                <div className="relative overflow-hidden group/img ">
-                  <img
-                    width={260}
-                    height={260}
-                    src="https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876861/frameMain.png_scqpda.webp"
-                    alt="frameMain"
-                    className="relative z-10 "
-                  />
+      {!loading && (
+        <div className="mt-3">
+          <CouponCarousel
+            perViewDesktop={5}
+            perViewMobile={2}
+            autoSlide={false}
+          >
+            {productDiscountList.map((productDiscount) => {
+              return (
+                <div
+                  key={productDiscount.id}
+                  className="bg-white h-full mx-3 p-2 rounded-5px cursor-pointer"
+                >
+                  <div className="relative overflow-hidden group/img ">
+                    <img
+                      width={260}
+                      height={260}
+                      src="https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876861/frameMain.png_scqpda.webp"
+                      alt="frameMain"
+                      className="relative z-10 "
+                    />
 
-                  <img
-                    src={productDiscount.imgA}
-                    alt={productDiscount.title.slice(
-                      1,
-                      productDiscount.title.length - 44
-                    )}
-                    className="group--hover/img:hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0  transition-all ease-in-out duration-700 delay-700"
-                  />
+                    <img
+                      src={productDiscount.imgA}
+                      alt={productDiscount.title.slice(
+                        1,
+                        productDiscount.title.length - 44
+                      )}
+                      className="group--hover/img:hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0  transition-all ease-in-out duration-700 delay-700"
+                    />
 
-                  <img
-                    src={productDiscount.imgB}
-                    alt={productDiscount.title.slice(
-                      1,
-                      productDiscount.title.length - 44
-                    )}
-                    className="hidden group-hover/img:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 transition-all ease-in-out duration-700 delay-700"
-                  />
-                  <AddToCart />
+                    <img
+                      src={productDiscount.imgB}
+                      alt={productDiscount.title.slice(
+                        1,
+                        productDiscount.title.length - 44
+                      )}
+                      className="hidden group-hover/img:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 transition-all ease-in-out duration-700 delay-700"
+                    />
+                    <AddToCart />
+                  </div>
+
+                  <h3 className="text-[14px] font-medium line-clamp-2 mt-2">
+                    {productDiscount.title}
+                  </h3>
+
+                  <div className="mt-2">
+                    <span className="text-[13px] font-medium  text-red-600">
+                      {productDiscount.priceProduct}
+                    </span>
+                    <span className="text-[13px] font-medium ml-3 line-through text-gray-500">
+                      {productDiscount.discountProduct}
+                    </span>
+                  </div>
                 </div>
-
-                <h3 className="text-[14px] font-medium line-clamp-2 mt-2">
-                  {productDiscount.title}
-                </h3>
-
-                <div className="mt-2">
-                  <span className="text-[13px] font-medium  text-red-600">
-                    {productDiscount.priceProduct}
-                  </span>
-                  <span className="text-[13px] font-medium ml-3 line-through text-gray-500">
-                    {productDiscount.discountProduct}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </CouponCarousel>
-      </div>
+              );
+            })}
+          </CouponCarousel>
+        </div>
+      )}
 
       <div className="md:mt-9 mt-3 flex items-center justify-center">
         <button className="outline-none flex items-center bg-white hover:bg-black hover:text-white text-black transition duration-300 ease-in-out px-5 py-2.5 cursor-pointer rounded-5px">
@@ -370,10 +374,8 @@ export const Product: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      console.log("Fetching products..."); // Debug log
 
       const data = await productAPI(brand);
-      console.log("Products received:", data); // Debug log
 
       // Backend trả về {data: [...]} nên cần extract
       const products = data.data || data;
@@ -520,13 +522,12 @@ export const Product: React.FC = () => {
         </div>
       </div>
       <div>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5">
+        <div className={`grid grid-cols-2 md:grid-cols-5 gap-3.5`}>
           {productDiscountList.map((product) => {
-            console.log(product);
             return (
               <div
                 key={product.id}
-                className=" w-full h-full bg-white p-2.5 cursor-pointer"
+                className={`w-full h-full bg-white p-2.5 cursor-pointer `}
               >
                 <div className="mb-4 h-[220px] relative overflow-hidden group ">
                   <img

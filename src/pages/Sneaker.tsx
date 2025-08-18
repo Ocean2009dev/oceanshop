@@ -1,7 +1,8 @@
 import { FaCartPlus, FaFilter, FaX } from "react-icons/fa6";
 import { FilterGroup } from "../components/Common/FilterGroup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "../components/Layout/Container";
+import { productAPI } from "../api/product";
 
 export default function Sneaker() {
   interface ProductDiscountList {
@@ -12,174 +13,32 @@ export default function Sneaker() {
     imgA: string;
     imgB: string;
   }
-  const productDiscountList: ProductDiscountList[] = [
-    {
-      id: 1,
-      title: " Giày Nike Jordan 1 Retro High OG SP 'Utility Stash' DN4336-001 ",
-      priceProduct: "7,929,900₫",
-      discountProduct: "8,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876731/shoe1a_pj9stt.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe1b_rtpmwz.webp",
-    },
-    {
-      id: 2,
-      title: "  Giày Nike Air Jordan 1 Mid GS 'White Shadow' 554725-073  ",
-      priceProduct: "7,573,500₫",
-      discountProduct: "8,500,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876731/shoe2a_t85m61.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe2b_bzamfq.png",
-    },
-    {
-      id: 3,
-      title: "  Giày Nike Jordan 1 Retro Golf 'Starfish' DD9315-800  ",
-      priceProduct: "6,147,900₫",
-      discountProduct: "6,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876733/shoe3a_drpxsn.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876737/shoe3b_fdqojy.png",
-    },
-    {
-      id: 4,
-      title: "  Giày Nike Jordan 1 High OG 'Denim' DM9036-104  ",
-      priceProduct: "6,147,900₫",
-      discountProduct: "6,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe4a_rb0b31.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876732/shoe4b_q7rsz5.png",
-    },
-    {
-      id: 5,
-      title: "  Giày Nike Air Jordan 1 Retro High OG 'Volt' 555088-702  ",
-      priceProduct: "6,147,900₫",
-      discountProduct: "6,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe5a_ctdruv.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876733/shoe5b_xi6c2a.png",
-    },
-    {
-      id: 6,
-      title: "  Giày Nike Jordan 1 Mid 'Light Smoke Grey' 554725-078  ",
-      priceProduct: "5,524,200₫",
-      discountProduct: "6,200,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876733/shoe6a_edwarv.webp",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876734/shoe6b_uvyiw8.webp",
-    },
-    {
-      id: 7,
-      title: " Giày Nike Wmns Air Jordan 1 Mid 'Shadow' BQ6472-007 ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876740/shoe7a_umcsyd.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876740/shoe7b_yixw9d.png",
-    },
-    {
-      id: 8,
-      title: "Giày Nike Wmns Air Jordan 1 Mid 'Particle Grey' DO7139-002  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876741/shoe8a_xyijxv.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876739/shoe8b_r7wpcj.png",
-    },
-    {
-      id: 9,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Siren Red' DC0774-060",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876739/shoe9a_tqcd2t.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876739/shoe9b_rky2mk.png",
-    },
-    {
-      id: 10,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
-    },
-    {
-      id: 11,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
-    },
-    {
-      id: 12,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
-    },
-    {
-      id: 13,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
-    },
-    {
-      id: 14,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
-    },
-    {
-      id: 15,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
-    },
-    {
-      id: 16,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
-    },
-    {
-      id: 17,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
-    },
-    {
-      id: 18,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
-    },
-    {
-      id: 19,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
-    },
-    {
-      id: 20,
-      title: " Giày Nike Wmns Air Jordan 1 Low 'Red Blue' DC0774-604  ",
-      priceProduct: "5,256,900₫",
-      discountProduct: "5,900,000₫",
-      imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",
-      imgB: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876747/shoe10b_yoxnqx.png",
-    },
-  ];
 
   const [isCloseFilter, setIsCloseFilter] = useState(false);
+  const [productDiscountList, setProductDiscountList] = useState<
+    ProductDiscountList[]
+  >([]);
+  const [loading, setLoading] = useState(false);
 
   const handleCloseFilter = (): void => {
     setIsCloseFilter(!isCloseFilter);
   };
+
+  const getProduct = async () => {
+    const product = await productAPI("");
+    setProductDiscountList(product.data);
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    try {
+      getProduct();
+    } catch (error) {
+      console.error("Lỗi không gọi được API", error)
+    } finally {
+      setLoading(false);
+    }
+  }, []);
   return (
     <Container>
       <div className="h-full px-4 md:p-0">
@@ -194,8 +53,8 @@ export default function Sneaker() {
             <FilterGroup
               className="mb-4 border border-gray-200 shadow"
               title="Danh mục sản phẩm"
-              options={["Sneaker", "Sandals", "Boots"]}
-              valueOptions={["{123}", "{123}", "{123}"]}
+              options={["Sneaker", "Nike", "Adidas"]}
+              valueOptions={["{450}", "{223}", "{1423}"]}
             />
             {/* Lọc thương hiệu */}
             <FilterGroup
@@ -402,7 +261,7 @@ export default function Sneaker() {
                   </select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5">
+              <div className={`grid grid-cols-2 md:grid-cols-5 gap-3.5 ${loading ? "animate-pulse" : "animate-none"}`}>
                 {productDiscountList.map((product) => {
                   return (
                     <div

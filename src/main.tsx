@@ -9,6 +9,7 @@ import Home from "./pages/Home.tsx";
 import Contact from "./pages/Contact.tsx";
 import Features from "./pages/Features.tsx";
 import { SignIn, SignUp } from "./pages/Login.tsx";
+import { Payment } from "./pages/Payment.tsx";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "/signin",
         element: <SignIn />,
+      },
+      {
+        path: "/pay",
+        element: <Payment />,
       },
     ],
   },

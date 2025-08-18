@@ -54,7 +54,7 @@ export const SignUp: React.FC = () => {
 
         <AuthInput type="email" placeholder="Nhập Email" required />
 
-        <AuthInput type="number" placeholder="Nhập số điện thoại" required />
+        <AuthInput type="text" placeholder="Nhập số điện thoại" required />
 
         <AuthInput type="password" placeholder="Nhập Mật Khẩu" required />
 

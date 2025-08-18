@@ -278,8 +278,9 @@ export const Nav: React.FC = () => {
 export const HeaderTop: React.FC = () => {
   interface City {
     id: number;
+    type?: string;
     phoneNumber: string;
-    citi: string;
+    city: string;
     district: string;
     road: string;
     nameShop: string;
@@ -287,53 +288,62 @@ export const HeaderTop: React.FC = () => {
   const citiList: City[] = [
     {
       id: 1,
+      type: "",
       phoneNumber: "0983 456 789",
-      citi: "Hồ Chí Minh",
+      city: "Hồ Chí Minh",
       district: "Quận 10",
       road: "168 3 Tháng 2, Phường 12, Quận 10",
       nameShop: "Lucky Card CN",
     },
     {
       id: 2,
+      type: "",
       phoneNumber: "0978 123 456",
-      citi: "Hồ Chí Minh",
+      city: "Hồ Chí Minh",
       district: "Quận Bình Thạnh",
       road: "244 Điện Biên Phủ, Phường 22, Quận Bình Thạnh",
       nameShop: "Lucky Card CN",
     },
     {
       id: 3,
+      type: "",
       phoneNumber: "0962 789 012",
-      citi: "Hồ Chí Minh",
+      city: "Hồ Chí Minh",
       district: "Quận Thủ Đức",
       road: "01 Võ Văn Ngân, Phường Linh Chiểu, Quận Thủ Đức",
       nameShop: "Lucky Card CN",
     },
     {
       id: 4,
+      type: "",
       phoneNumber: "0987 654 321",
-      citi: "Hà Nội",
+      city: "Hà Nội",
       district: "Quận Hoàn Kiếm",
       road: "Số 15, Phố Hàng Đào, Phường Hàng Đào, Quận Hoàn Kiếm",
       nameShop: "Lucky Card CN",
     },
     {
       id: 5,
+      type: "",
       phoneNumber: "0979 876 543",
-      citi: "Hà Nội",
+      city: "Hà Nội",
       district: "Quận Ba Đình",
       road: "Số 120, Đường Kim Mã, Phường Kim Mã, Quận Ba Đình",
       nameShop: "Lucky Card CN",
     },
     {
       id: 6,
+      type: "",
       phoneNumber: "0961 234 567",
-      citi: "Hà Nội",
+      city: "Hà Nội",
       district: "Quận Hai Bà Trưng",
       road: "Số 220, Phố Bà Triệu, Phường Lê Đại Hành, Quận Hai Bà Trưng",
       nameShop: "Lucky Card CN",
     },
   ];
+
+  const [cityMap, setCityMap] = useState<string>("all");
+  // const [cityListMap, setcityListMap] = useState([]);
 
   const [showUser, setShowUser] = useState(false);
   const [showLocation, setShowLocation] = useState(false);
@@ -391,6 +401,26 @@ export const HeaderTop: React.FC = () => {
     }, 3000);
     return () => clearInterval(timer);
   }, [shoesList]);
+
+  // handle filter location
+  const handleFilterLocation = (
+    e: React.FormEvent<HTMLSelectElement>
+  ): void => {
+    const valueTaget = e.target.value;
+    setCityMap(valueTaget);
+  };
+
+  const filterMap = (raw: string) => {
+    const q = raw.trim().toLowerCase();
+
+    if (q === "" || q === "all") return citiList;
+
+    return citiList.filter((item) => {
+      const district = item.district?.trim().toLowerCase() ?? "";
+      const city = item.city?.trim().toLowerCase() ?? "";
+      return district === q || city === q;
+    });
+  };
 
   return (
     <div className="bg-bgheader">
@@ -510,37 +540,39 @@ export const HeaderTop: React.FC = () => {
                 </h1>
                 <div className="flex justify-between mb-3 ">
                   <select
+                    onChange={handleFilterLocation}
                     id="currency"
                     name="currency"
                     className="w-full h-full p-3 mr-1 rounded-md border-[1px] border-[#D7D7D7]  bg-white outline-none pl-2 pr-7 text-gray-500  sm:text-sm"
                   >
-                    <option>Chọn Tỉnh/ Thành Phố</option>
-                    <option value={1}>Hồ Chí Minh</option>
-                    <option value={2}>Hà Nội</option>
+                    <option value={"all"}>Chọn Tỉnh/ Thành Phố</option>
+                    <option value={"Hồ Chí Minh"}>Hồ Chí Minh</option>
+                    <option value={"Hà Nội"}>Hà Nội</option>
                   </select>
                   <select
+                    onChange={handleFilterLocation}
                     id="currency"
                     name="currency"
                     className="w-full h-full p-3 ml-1 rounded-md border-[1px] border-[#D7D7D7] bg-white outline-none pl-2 pr-7 text-gray-500  sm:text-sm"
                   >
-                    <option>Chọn Quận/ Huyện</option>
+                    <option value={"all"}>Chọn Quận/ Huyện</option>
 
                     {citiList.map((citiItem, index) => (
-                      <option key={index} value={citiItem.id}>
+                      <option key={index} value={citiItem.district}>
                         {citiItem.district}
                       </option>
                     ))}
                   </select>
                 </div>
                 <div className="h-80 overflow-y-scroll">
-                  {citiList.map((city) => {
+                  {filterMap(cityMap).map((city) => {
                     return (
                       <div
                         className="bg-white p-4 mb-2 flex flex-col gap-1 "
                         key={city.id}
                       >
                         <h1 className="text-black text-[15px] font-bold">
-                          {city.citi} - {city.nameShop} {city.district}
+                          {city.city} - {city.nameShop} {city.district}
                         </h1>
                         <div>
                           <span className="w-full text-black text-[15px] font-normal break-words block whitespace-normal">
@@ -659,8 +691,11 @@ export const HeaderTop: React.FC = () => {
                     <button className="p-3 border-[1px] w-full outline-0 uppercase font-bold cursor-pointer bg-black text-white hover:bg-white hover:text-black">
                       xem giỏ hàng
                     </button>
-                    <button className="p-3 border-[1px] w-full outline-0 uppercase font-bold cursor-pointer hover:bg-black hover:text-white">
-                      thanh toán
+                    <button
+                      className="p-3 border-[1px] w-full outline-0 uppercase font-bold cursor-pointer hover:bg-black hover:text-white"
+                      onClick={handleCart}
+                    >
+                      <Link to={"pay"}> thanh toán</Link>
                     </button>
                   </div>
                 </div>
