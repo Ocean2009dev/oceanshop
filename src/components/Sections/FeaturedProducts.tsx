@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import CouponCarousel from "../Common/Carousel";
-import { FaAnglesRight, FaCartPlus } from "react-icons/fa6";
+import { FaAnglesRight } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { AddToCart, Card } from "../Common/Card";
 import { productAPI } from "../../api/product";
-import Loading from "../Common/Loading";
+import { Card } from "../Common/Card";
+import CouponCarousel from "../Common/Carousel";
 import Error from "../Common/Error";
+import Loading from "../Common/Loading";
 
 interface ProductDiscountList {
   id?: number;
