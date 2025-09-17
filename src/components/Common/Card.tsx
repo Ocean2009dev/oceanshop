@@ -31,3 +31,58 @@ export const AddToCart: React.FC = () => {
     </div>
   );
 };
+
+interface Card {
+  product: any;
+  isDiscount: boolean;
+  className?: string;
+}
+
+export const Card: React.FC<Card> = ({
+  product,
+  isDiscount = false,
+  className,
+}) => {
+  return (
+    <div
+      key={product.id}
+      className={`${className} bg-white h-full p-2 rounded-5px cursor-pointer overflow-hidden`}
+    >
+      <div className=" h-[240px] relative overflow-hidden group/img ">
+        {isDiscount && (
+          <img
+            src="https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876861/frameMain.png_scqpda.webp"
+            alt="frameMain"
+            className="relative z-10 h-64 w-64"
+          />
+        )}
+
+        <img
+          src={product.imgA}
+          alt={product.title.slice(1, product.title.length - 44)}
+          className="group-hover/img:hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0  transition-all ease-in-out duration-700 delay-700"
+        />
+
+        <img
+          src={product.imgB}
+          alt={product.title.slice(1, product.title.length - 44)}
+          className="hidden group-hover/img:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 transition-all ease-in-out duration-700 delay-700"
+        />
+        <AddToCart />
+      </div>
+
+      <h3 className="text-[14px] font-medium line-clamp-2 mt-2">
+        {product.title}
+      </h3>
+
+      <div className="flex items-center gap-3 mt-2 overflow-hidden">
+        <span className="text-[13px] font-medium  text-red-600 truncate  max-w-[50%]">
+          {product.priceProduct}
+        </span>
+        <span className="text-[13px] font-medium ml-3 line-through text-gray-500 truncate max-w-[50%] ">
+          {product.discountProduct}
+        </span>
+      </div>
+    </div>
+  );
+};

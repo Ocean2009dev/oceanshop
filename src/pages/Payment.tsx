@@ -1,24 +1,72 @@
 import { FaArrowLeftLong } from "react-icons/fa6";
 import Container from "../components/Layout/Container";
-
-import React, { useState, type ReactEventHandler } from "react";
+import { useState } from "react";
 
 export const Payment = () => {
-  const [selectedPayment, setSelectedPayment] = useState("card");
   const [formData, setFormData] = useState({
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
-    cardName: "",
     email: "",
-    billingAddress: "",
+    phone: "",
+    fullName: "",
+  });
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [errors, setErrors] = useState({
+    email: "",
+    phone: "",
+    fullName: "",
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+    // Xóa lỗi khi người dùng nhập lại
+    if (errors[name as keyof typeof errors]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = { email: "", phone: "", fullName: "" };
+    let hasErrors = false;
+
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = "Vui lòng nhập họ tên";
+      hasErrors = true;
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Vui lòng nhập email";
+      hasErrors = true;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Email không hợp lệ";
+      hasErrors = true;
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Vui lòng nhập số điện thoại";
+      hasErrors = true;
+    } else if (!/^[0-9]{10,11}$/.test(formData.phone)) {
+      newErrors.phone = "Số điện thoại phải có 10-11 chữ số";
+      hasErrors = true;
+    }
+
+    setErrors(newErrors);
+    return !hasErrors;
+  };
+
+  const handlePayment = async () => {
+    if (!validateForm()) return;
+
+    setIsProcessing(true);
+
+    // Giả lập xử lý thanh toán
+    setTimeout(() => {
+      // Chuyển hướng đến VNPay (giả lập)
+      alert("Đang chuyển hướng đến VNPay...");
+      setIsProcessing(false);
+    }, 2000);
   };
 
   return (
@@ -102,124 +150,56 @@ export const Payment = () => {
                   Thông tin thanh toán
                 </h2>
 
-                {/* Payment Methods */}
+                {/* VNPay Payment Method */}
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold text-gray-700 mb-4">
                     Phương thức thanh toán
                   </h3>
-                  <div className="grid grid-cols-3 gap-3">
-                    <button
-                      onClick={() => setSelectedPayment("card")}
-                      className={`p-4 border-2 rounded-lg transition-all ${
-                        selectedPayment === "card"
-                          ? "border-blue-500 bg-blue-50"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
-                    >
-                      <span className="text-sm font-medium">Thẻ</span>
-                    </button>
-
-                    <button
-                      onClick={() => setSelectedPayment("momo")}
-                      className={`p-4 border-2 rounded-lg transition-all ${
-                        selectedPayment === "momo"
-                          ? "border-blue-500 bg-blue-50"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
-                    >
-                      <div className="w-6 h-6 mx-auto mb-2 bg-pink-500 rounded text-white text-xs flex items-center justify-center font-bold">
-                        M
+                  <div className="p-4 border-2 border-blue-500 bg-blue-50 rounded-lg">
+                    <div className="flex items-center justify-center">
+                      <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                        <span className="text-white font-bold text-lg">VN</span>
                       </div>
-                      <span className="text-sm font-medium">MoMo</span>
-                    </button>
-
-                    <button
-                      onClick={() => setSelectedPayment("banking")}
-                      className={`p-4 border-2 rounded-lg transition-all ${
-                        selectedPayment === "banking"
-                          ? "border-blue-500 bg-blue-50"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
-                    >
-                      <div className="w-6 h-6 mx-auto mb-2 bg-green-500 rounded text-white text-xs flex items-center justify-center font-bold">
-                        ₫
+                      <div>
+                        <h4 className="font-semibold text-gray-800">VNPay</h4>
+                        <p className="text-sm text-gray-600">
+                          Thanh toán qua VNPay
+                        </p>
                       </div>
-                      <span className="text-sm font-medium">Banking</span>
-                    </button>
+                    </div>
                   </div>
                 </div>
 
-                {/* Card Form */}
-                {selectedPayment === "card" && (
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Số thẻ
-                      </label>
-                      <input
-                        type="text"
-                        name="cardNumber"
-                        value={formData.cardNumber}
-                        onChange={handleInputChange}
-                        placeholder="1234 5678 9012 3456"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Ngày hết hạn
-                        </label>
-                        <input
-                          type="text"
-                          name="expiryDate"
-                          value={formData.expiryDate}
-                          onChange={handleInputChange}
-                          placeholder="MM/YY"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          CVV
-                        </label>
-                        <input
-                          type="text"
-                          name="cvv"
-                          value={formData.cvv}
-                          onChange={handleInputChange}
-                          placeholder="123"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Tên chủ thẻ
-                      </label>
-                      <input
-                        type="text"
-                        name="cardName"
-                        value={formData.cardName}
-                        onChange={handleInputChange}
-                        placeholder="NGUYEN VAN A"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Billing Information */}
-                <div className="mt-6 space-y-4">
+                {/* Customer Information */}
+                <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-gray-700">
-                    Thông tin hóa đơn
+                    Thông tin khách hàng
                   </h3>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email
+                      Họ và tên *
+                    </label>
+                    <input
+                      type="text"
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      placeholder="Nhập họ và tên"
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        errors.fullName ? "border-red-500" : "border-gray-300"
+                      }`}
+                    />
+                    {errors.fullName && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.fullName}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email *
                     </label>
                     <input
                       type="email"
@@ -227,45 +207,94 @@ export const Payment = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="example@email.com"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        errors.email ? "border-red-500" : "border-gray-300"
+                      }`}
                     />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.email}
+                      </p>
+                    )}
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Địa chỉ
+                      Số điện thoại *
                     </label>
-                    <textarea
-                      name="billingAddress"
-                      value={formData.billingAddress}
+                    <input
+                      type="text"
+                      name="phone"
+                      value={formData.phone}
                       onChange={handleInputChange}
-                      placeholder="Nhập địa chỉ của bạn"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="0123456789"
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        errors.phone ? "border-red-500" : "border-gray-300"
+                      }`}
                     />
+                    {errors.phone && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.phone}
+                      </p>
+                    )}
                   </div>
                 </div>
 
+                {/* VNPay Info */}
+                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-start">
+                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center mr-3 mt-0.5">
+                      <span className="text-white text-xs">ℹ</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-blue-800 mb-1">
+                        Thanh toán qua VNPay
+                      </h4>
+                      <p className="text-sm text-blue-700">
+                        Bạn sẽ được chuyển hướng đến trang VNPay để hoàn tất
+                        thanh toán một cách an toàn.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Continue Payment Button */}
+                <button
+                  onClick={handlePayment}
+                  disabled={isProcessing}
+                  className={`w-full mt-6 py-4 rounded-lg font-semibold text-lg transition-all shadow-lg ${
+                    isProcessing
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-blue-600 hover:bg-blue-700 transform hover:scale-105"
+                  } text-white`}
+                >
+                  {isProcessing ? (
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Đang xử lý...
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center">
+                      Tiếp tục thanh toán 1.320.000₫
+                    </div>
+                  )}
+                </button>
+
                 {/* Security Notice */}
-                <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <div className="flex items-center">
+                <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-center justify-center">
                     <span className="text-sm text-green-800">
-                      Thông tin của bạn được bảo mật với mã hóa SSL 256-bit
+                      🔒 Thanh toán được bảo mật bởi VNPay
                     </span>
                   </div>
                 </div>
 
-                {/* Payment Button */}
-                <button className="w-full mt-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg">
-                  <div className="flex items-center justify-center">
-                    Thanh toán 1.320.000₫
-                  </div>
-                </button>
-
-                {/* Trust Badges */}
-                <div className="mt-4 flex items-center justify-center space-x-4 text-sm text-gray-500">
-                  <div className="flex items-center">Bảo mật</div>
-                  <div className="flex items-center">Nhanh chóng</div>
-                  <div className="flex items-center">Đáng tin cậy</div>
+                {/* Note */}
+                <div className="mt-4 text-center">
+                  <p className="text-xs text-gray-500">
+                    Bằng cách tiếp tục, bạn đồng ý với điều khoản sử dụng của
+                    chúng tôi
+                  </p>
                 </div>
               </div>
             </div>

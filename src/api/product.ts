@@ -1,9 +1,12 @@
 
 export const productAPI = async (brand: string | null = null) => {
     try {
+        // const url = brand
+        //     ? `https://be-oceanshop.onrender.com/api/product/${brand}`
+        //     : `https://be-oceanshop.onrender.com/api/product`;
         const url = brand
-            ? `https://be-oceanshop.onrender.com/api/product/${brand}`
-            : `https://be-oceanshop.onrender.com/api/product`;
+            ? `http://localhost:8017/api/product/${brand}`
+            : `http://localhost:8017/api/product`;
 
         const response = await fetch(url, {
             method: 'GET',

@@ -13,6 +13,8 @@ import {
 } from "react-icons/fa6";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import SearchBox from "../Common/sreachBox";
+import { productAPI } from "../../api/product";
 
 export const MenuSubAdidas: React.FC = () => {
   return (
@@ -395,6 +397,8 @@ export const HeaderTop: React.FC = () => {
   };
 
   useEffect(() => {
+    fectchData("");
+
     const timer = setInterval(() => {
       const numberRandom = Math.floor(Math.random() * shoesList.length);
       setShoes(shoesList[numberRandom]);
@@ -404,7 +408,7 @@ export const HeaderTop: React.FC = () => {
 
   // handle filter location
   const handleFilterLocation = (
-    e: React.FormEvent<HTMLSelectElement>
+    e: React.ChangeEvent<HTMLSelectElement>
   ): void => {
     const valueTaget = e.target.value;
     setCityMap(valueTaget);
@@ -420,6 +424,18 @@ export const HeaderTop: React.FC = () => {
       const city = item.city?.trim().toLowerCase() ?? "";
       return district === q || city === q;
     });
+  };
+  const [data, SetData] = useState<any[]>([]);
+  const [searchData, setSearchData] = useState("");
+
+  const fectchData = async (brand: string = "") => {
+    try {
+      const product = await productAPI(brand || null);
+      SetData(product.data || []);
+    } catch (error) {
+      console.error("Không thể call API:", error);
+      SetData([]);
+    }
   };
 
   return (
@@ -483,20 +499,30 @@ export const HeaderTop: React.FC = () => {
           </h1>
 
           {/* Thanh tìm kiếm mọi thứ */}
-          <form
-            action=""
-            className="hidden w-full md:flex items-center bg-white rounded-[5px] px-0.5 ml-4"
-          >
-            <input
-              type="text"
-              placeholder={shoes}
-              className=" w-full px-2.5 py-2.5 outline-hidden bg-transparent"
-            />
+          <div className="relative w-full  ml-4">
+            <form
+              action=""
+              className="hidden  md:flex items-center bg-white rounded-[5px] "
+            >
+              <input
+                type="text"
+                placeholder={shoes}
+                className=" w-full px-2.5 py-2.5 outline-hidden bg-transparent"
+                onChange={(e) => setSearchData(e.target.value)}
+              />
 
-            <div className="flex items-center bg-bg_button rounded-[5px] px-6 py-1.5 cursor-pointer">
-              <FaSistrix className="text-white w-6 h-6" />
-            </div>
-          </form>
+              <div className="flex items-center bg-bg_button rounded-[5px] px-6 py-1.5 cursor-pointer mr-2">
+                <FaSistrix className="text-white w-6 h-6" />
+              </div>
+            </form>
+            {searchData && (
+              <SearchBox
+                productList={data}
+                searchData={searchData}
+                className="left-0 top-11"
+              />
+            )}
+          </div>
 
           {/* địa chỉ cửa hàng, đăng nhập và hiển thị số lượng giỏ hàng */}
           <div className=" relative flex items-center justify-between text-white whitespace-nowrap cursor-pointer mr-4">
@@ -516,8 +542,74 @@ export const HeaderTop: React.FC = () => {
                     type="text"
                     placeholder={shoes}
                     className="mt-3 w-full px-4 py-2.5 outline-hidden bg-content"
+                    onChange={(e) => setSearchData(e.target.value)}
                   />
                 </div>
+
+                {/* Kết quả tìm kiếm mobile */}
+                {searchData && (
+                  <div className="max-h-[300px] overflow-y-auto">
+                    <div className="flex justify-between items-center p-2 bg-gray-100 mb-2">
+                      <p className="uppercase text-sm">Sản phẩm</p>
+                      <p className="text-sm">
+                        Tìm thấy{" "}
+                        {
+                          data.filter((product) =>
+                            product.title
+                              ?.toLowerCase()
+                              .includes(searchData.toLowerCase())
+                          ).length
+                        }{" "}
+                        sản phẩm
+                      </p>
+                    </div>
+
+                    {data.filter((product) =>
+                      product.title
+                        ?.toLowerCase()
+                        .includes(searchData.toLowerCase())
+                    ).length > 0 ? (
+                      data
+                        .filter((product) =>
+                          product.title
+                            ?.toLowerCase()
+                            .includes(searchData.toLowerCase())
+                        )
+                        .map((product) => (
+                          <div
+                            className="flex p-3 mb-2 cursor-pointer hover:bg-gray-50"
+                            key={product.id}
+                          >
+                            <img
+                              height={60}
+                              width={60}
+                              src={product.imgA}
+                              alt={product.title}
+                            />
+                            <div className="ml-3">
+                              <p className="font-medium text-sm">
+                                {product.title}
+                              </p>
+                              <div>
+                                <span className="text-red-500 font-semibold text-sm">
+                                  {product.priceProduct || "4.000.000 đ"}
+                                </span>
+                                {product.discountProduct && (
+                                  <span className="text-gray-500 line-through ml-2 text-sm">
+                                    {product.discountProduct}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                    ) : (
+                      <div className="p-4 text-center text-gray-500">
+                        Không tìm thấy sản phẩm nào
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
             {/* địa chỉ cửa hàng */}

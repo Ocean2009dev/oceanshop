@@ -32,42 +32,28 @@ const Footer: React.FC = () => {
               <img
                 width={28}
                 height={28}
-                src="https://www.apkwork.com/upload/20240304/6bc260e9571c65.png"
+                src="https://img.icons8.com/?size=100&id=0m71tmRjlxEe&format=png&color=000000"
                 alt=""
                 className="mr-3"
               />
               <img
                 width={28}
                 height={28}
-                src="https://www.apkwork.com/upload/20240220/ab3ea39b70ffb4.png"
+                src="https://img.icons8.com/?size=100&id=118497&format=png&color=000000"
                 alt=""
                 className="mr-3"
               />
               <img
                 width={28}
                 height={28}
-                src="https://images.freeimages.com/image/large-previews/b2e/x-twitter-black-isolated-logo-5694253.png?fmt=webp&h=350"
+                src="https://img.icons8.com/?size=100&id=phOKFKYpe00C&format=png&color=000000"
                 alt=""
                 className="mr-3 bg-white rounded-md"
               />
               <img
                 width={28}
                 height={28}
-                src="https://www.apkwork.com/upload/20240219/67f1131c8ba52b.png"
-                alt=""
-                className="mr-3"
-              />
-              <img
-                width={28}
-                height={28}
-                src="https://www.apkwork.com/upload/20240426/75956c519fc77f.jpg"
-                alt=""
-                className="mr-3"
-              />
-              <img
-                width={28}
-                height={28}
-                src="https://www.apkwork.com/upload/20240223/b25f1f3b90de6c.png"
+                src="https://img.icons8.com/?size=100&id=Xy10Jcu1L2Su&format=png&color=000000"
                 alt=""
                 className="mr-3"
               />
