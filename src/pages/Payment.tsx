@@ -81,8 +81,7 @@ export const Payment = () => {
   }
   const location = useLocation();
   const [productData, setProductData] = useState<ProductData | null>(null);
-  const [vat, setVat] = useState<number>(120);
-
+  const vat: number = 120;
   // GetData
   useEffect(() => {
     console.log(location.state.productData);

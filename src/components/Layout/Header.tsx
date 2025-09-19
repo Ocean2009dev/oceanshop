@@ -16,6 +16,16 @@ import { Link } from "react-router-dom";
 import SearchBox from "../Common/sreachBox";
 import { productAPI } from "../../api/product";
 
+interface ProductItem {
+  id: string;
+  title: string;
+  imgA: string;
+  priceProduct?: string;
+  discountProduct?: string;
+  price?: number;
+  originalPrice?: number;
+}
+
 export const MenuSubAdidas: React.FC = () => {
   return (
     <>
@@ -425,7 +435,7 @@ export const HeaderTop: React.FC = () => {
       return district === q || city === q;
     });
   };
-  const [data, SetData] = useState<unknown[]>([]);
+  const [data, SetData] = useState<ProductItem[]>([]);
   const [searchData, setSearchData] = useState("");
   const [searchMoblieData, setSearchMoblieData] = useState("");
 
