@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 interface ProductItem {
   id: string;
@@ -14,12 +15,19 @@ interface SearchBoxProps {
   productList: ProductItem[];
   searchData?: string;
   className?: string;
+  onProductClick?: () => void;
 }
 
-const SearchBox = ({ productList, searchData, className }: SearchBoxProps) => {
+const SearchBox = ({
+  productList,
+  searchData,
+  className,
+  onProductClick,
+}: SearchBoxProps) => {
   const [newProduct, setNewProduct] = useState<ProductItem[]>([]);
 
   useEffect(() => {
+    console.log(searchData);
     if (searchData && searchData.trim() !== "") {
       const newArr = productList.filter((product) =>
         product.title.toLowerCase().includes(searchData.toLowerCase())
@@ -43,9 +51,15 @@ const SearchBox = ({ productList, searchData, className }: SearchBoxProps) => {
       <div className="overflow-y-auto max-h-[400px]">
         {newProduct.length > 0 ? (
           newProduct.map((product) => (
-            <div
+            <Link
               className="flex p-4 mb-2 cursor-pointer hover:bg-gray-50"
               key={product.id}
+              to={`/product/${encodeURIComponent(product.title)}`}
+              state={{ productData: product }}
+              onClick={() => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                onProductClick && onProductClick();
+              }}
             >
               <img
                 height={100}
@@ -66,7 +80,7 @@ const SearchBox = ({ productList, searchData, className }: SearchBoxProps) => {
                   )}
                 </div>
               </div>
-            </div>
+            </Link>
           ))
         ) : (
           <div className="p-4 text-center text-gray-500">

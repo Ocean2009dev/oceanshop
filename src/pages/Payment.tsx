@@ -1,6 +1,7 @@
 import { FaArrowLeftLong } from "react-icons/fa6";
 import Container from "../components/Layout/Container";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 export const Payment = () => {
   const [formData, setFormData] = useState({
@@ -69,6 +70,35 @@ export const Payment = () => {
     }, 2000);
   };
 
+  interface ProductData {
+    id: string;
+    title: string;
+    imgA: string;
+    priceProduct?: string;
+    discountProduct?: string;
+    price?: number;
+    originalPrice?: number;
+  }
+  const location = useLocation();
+  const [productData, setProductData] = useState<ProductData | null>(null);
+  const [vat, setVat] = useState<number>(120);
+
+  // GetData
+  useEffect(() => {
+    console.log(location.state.productData);
+    setProductData(location.state.productData);
+  }, [location.state]);
+
+  const priceOrder = () => {
+    const priceProduct =
+      Number(
+        productData?.priceProduct
+          ?.slice(0, productData?.priceProduct?.length - 1)
+          .replaceAll(",", "")
+      ) - vat;
+
+    return priceProduct.toLocaleString("vi-VN");
+  };
   return (
     <>
       <Container>
@@ -94,17 +124,18 @@ export const Payment = () => {
 
                 <div className="space-y-4 mb-6">
                   <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                    <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold">SP</span>
+                    <div className="w-16 h-16  rounded-lg flex items-center justify-center">
+                      <img src={productData?.imgA} alt={productData?.title} />
                     </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-800">
-                        Sản phẩm Premium
+                        {productData?.title}
                       </h3>
-                      <p className="text-gray-600 text-sm">Gói 1 năm</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-gray-800">1.200.000₫</p>
+                      <p className="font-bold text-gray-800">
+                        {productData?.priceProduct}
+                      </p>
                       <p className="text-sm text-gray-500">x1</p>
                     </div>
                   </div>
@@ -113,7 +144,7 @@ export const Payment = () => {
                 <div className="border-t pt-4 space-y-2">
                   <div className="flex justify-between text-gray-600">
                     <span>Tạm tính</span>
-                    <span>1.200.000₫</span>
+                    <span>{productData?.priceProduct}</span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Phí vận chuyển</span>
@@ -121,11 +152,11 @@ export const Payment = () => {
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>VAT (10%)</span>
-                    <span>120.000₫</span>
+                    <span>{vat}</span>
                   </div>
                   <div className="border-t pt-2 flex justify-between text-xl font-bold text-gray-800">
                     <span>Tổng cộng</span>
-                    <span>1.320.000₫</span>
+                    <span>{priceOrder()}</span>
                   </div>
                 </div>
 

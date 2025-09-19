@@ -425,8 +425,9 @@ export const HeaderTop: React.FC = () => {
       return district === q || city === q;
     });
   };
-  const [data, SetData] = useState<any[]>([]);
+  const [data, SetData] = useState<unknown[]>([]);
   const [searchData, setSearchData] = useState("");
+  const [searchMoblieData, setSearchMoblieData] = useState("");
 
   const fectchData = async (brand: string = "") => {
     try {
@@ -520,6 +521,7 @@ export const HeaderTop: React.FC = () => {
                 productList={data}
                 searchData={searchData}
                 className="left-0 top-11"
+                onProductClick={() => setSearchData("")}
               />
             )}
           </div>
@@ -542,74 +544,21 @@ export const HeaderTop: React.FC = () => {
                     type="text"
                     placeholder={shoes}
                     className="mt-3 w-full px-4 py-2.5 outline-hidden bg-content"
-                    onChange={(e) => setSearchData(e.target.value)}
+                    onChange={(e) => setSearchMoblieData(e.target.value)}
                   />
+                  {/* Kết quả tìm kiếm mobile */}
+                  {searchMoblieData && (
+                    <SearchBox
+                      productList={data}
+                      searchData={searchMoblieData}
+                      className="left-0 top-33 px-0"
+                      onProductClick={() => {
+                        setSearchMoblieData("");
+                        setShowSearch(false);
+                      }}
+                    />
+                  )}
                 </div>
-
-                {/* Kết quả tìm kiếm mobile */}
-                {searchData && (
-                  <div className="max-h-[300px] overflow-y-auto">
-                    <div className="flex justify-between items-center p-2 bg-gray-100 mb-2">
-                      <p className="uppercase text-sm">Sản phẩm</p>
-                      <p className="text-sm">
-                        Tìm thấy{" "}
-                        {
-                          data.filter((product) =>
-                            product.title
-                              ?.toLowerCase()
-                              .includes(searchData.toLowerCase())
-                          ).length
-                        }{" "}
-                        sản phẩm
-                      </p>
-                    </div>
-
-                    {data.filter((product) =>
-                      product.title
-                        ?.toLowerCase()
-                        .includes(searchData.toLowerCase())
-                    ).length > 0 ? (
-                      data
-                        .filter((product) =>
-                          product.title
-                            ?.toLowerCase()
-                            .includes(searchData.toLowerCase())
-                        )
-                        .map((product) => (
-                          <div
-                            className="flex p-3 mb-2 cursor-pointer hover:bg-gray-50"
-                            key={product.id}
-                          >
-                            <img
-                              height={60}
-                              width={60}
-                              src={product.imgA}
-                              alt={product.title}
-                            />
-                            <div className="ml-3">
-                              <p className="font-medium text-sm">
-                                {product.title}
-                              </p>
-                              <div>
-                                <span className="text-red-500 font-semibold text-sm">
-                                  {product.priceProduct || "4.000.000 đ"}
-                                </span>
-                                {product.discountProduct && (
-                                  <span className="text-gray-500 line-through ml-2 text-sm">
-                                    {product.discountProduct}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))
-                    ) : (
-                      <div className="p-4 text-center text-gray-500">
-                        Không tìm thấy sản phẩm nào
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
             )}
             {/* địa chỉ cửa hàng */}

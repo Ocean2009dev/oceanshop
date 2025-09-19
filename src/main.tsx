@@ -10,6 +10,7 @@ import Contact from "./pages/Contact.tsx";
 import Features from "./pages/Features.tsx";
 import { SignIn, SignUp } from "./pages/Login.tsx";
 import { Payment } from "./pages/Payment.tsx";
+import Product from "./pages/Product.tsx";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "/pay",
         element: <Payment />,
+      },
+      {
+        path: "/product/:title",
+        element: <Product />,
       },
     ],
   },
