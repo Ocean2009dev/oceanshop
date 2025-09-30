@@ -363,6 +363,7 @@ export const HeaderTop: React.FC = () => {
   // const [cityListMap, setcityListMap] = useState([]);
 
   const [showUser, setShowUser] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [showLocation, setShowLocation] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -384,9 +385,19 @@ export const HeaderTop: React.FC = () => {
     setShowLocation(false);
     setShowCart(false);
     setShowUser(false);
+    setShowUserMenu(false);
   };
   const handleLogin = (): void => {
     setShowUser(!showUser);
+    setShowUserMenu(false);
+    setShowLocation(false);
+    setShowCart(false);
+    setShowSearch(false);
+  };
+
+  const handleUserMenu = (): void => {
+    setShowUserMenu(!showUserMenu);
+    setShowUser(false);
     setShowLocation(false);
     setShowCart(false);
     setShowSearch(false);
@@ -396,10 +407,12 @@ export const HeaderTop: React.FC = () => {
     setShowLocation(false);
     setShowSearch(false);
     setShowUser(false);
+    setShowUserMenu(false);
   };
   const handleLocation = (): void => {
     setShowLocation(!showLocation);
     setShowUser(false);
+    setShowUserMenu(false);
     setShowCart(false);
     setShowSearch(false);
   };
@@ -489,6 +502,7 @@ export const HeaderTop: React.FC = () => {
       await logout();
       setUser(null);
       setShowUser(false);
+      setShowUserMenu(false);
     } catch (error) {
       console.error("Lỗi đăng xuất:", error);
     }
@@ -691,9 +705,12 @@ export const HeaderTop: React.FC = () => {
 
             {/* đăng nhập */}
             {user ? (
-              <div className="ml-4 group relative">
-                <div className="flex items-center">
-                  <FaFaceGrinSquint className="w-6 h-6 text-green-400 animate-spin" />
+              <div className="ml-4 relative">
+                <div
+                  className="flex items-center cursor-pointer"
+                  onClick={handleUserMenu}
+                >
+                  <FaFaceGrinSquint className="w-6 h-6 text-green-400" />
 
                   <div className="hidden md:block ml-4">
                     <span className="text-sm">Xin chào!</span>
@@ -701,27 +718,33 @@ export const HeaderTop: React.FC = () => {
                       <span className="mr-0.5 text-sm font-medium">
                         {user.email?.split("@")[0] || "User"}
                       </span>
-                      <FaAngleDown />
+                      <FaAngleDown
+                        className={`transition-transform ${
+                          showUserMenu ? "rotate-180" : ""
+                        }`}
+                      />
                     </div>
                   </div>
                 </div>
 
-                <div className="group-hover:block hidden absolute top-10 left-[-100px] md:left-0 z-100 bg-white shadow-xl rounded-lg border">
-                  <div className="p-4 min-w-[200px]">
-                    <div className="text-black mb-3 pb-3 border-b">
-                      <p className="font-medium">
-                        {user.displayName || "Người dùng"}
-                      </p>
-                      <p className="text-sm text-gray-600">{user.email}</p>
+                {showUserMenu && (
+                  <div className="absolute top-10 left-[-150px] md:left-0 z-100 bg-white shadow-xl rounded-lg border min-w-[200px]">
+                    <div className="p-4">
+                      <div className="text-black mb-3 pb-3 border-b">
+                        <p className="font-medium">
+                          {user.displayName || "Người dùng"}
+                        </p>
+                        <p className="text-sm text-gray-600">{user.email}</p>
+                      </div>
+                      <button
+                        onClick={handleLogOut}
+                        className="w-full text-left px-3 py-2 text-red-600 hover:bg-red-50 rounded transition-colors"
+                      >
+                        Đăng xuất
+                      </button>
                     </div>
-                    <button
-                      onClick={handleLogOut}
-                      className="w-full text-left px-3 py-2 text-red-600 hover:bg-red-50 rounded transition-colors"
-                    >
-                      Đăng xuất
-                    </button>
                   </div>
-                </div>
+                )}
               </div>
             ) : (
               <div className="flex items-center ml-4" onClick={handleLogin}>

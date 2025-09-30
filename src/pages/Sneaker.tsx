@@ -1,9 +1,10 @@
-import { FaCartPlus, FaFilter, FaX } from "react-icons/fa6";
+import { FaFilter, FaX } from "react-icons/fa6";
 import { FilterGroup } from "../components/Common/FilterGroup";
 import { useEffect, useState } from "react";
 import Container from "../components/Layout/Container";
 import { productAPI } from "../api/product";
 import Loading from "../components/Common/Loading";
+import { Card } from "../components/Common/Card";
 
 export default function Sneaker() {
   interface ProductDiscountList {
@@ -13,13 +14,22 @@ export default function Sneaker() {
     discountProduct: string;
     imgA: string;
     imgB: string;
+    brand?: string;
   }
 
   const [isCloseFilter, setIsCloseFilter] = useState(false);
   const [productDiscountList, setProductDiscountList] = useState<
     ProductDiscountList[]
   >([]);
+  const [filteredProducts, setFilteredProducts] = useState<
+    ProductDiscountList[]
+  >([]);
   const [loading, setLoading] = useState(false);
+  const [sortBy, setSortBy] = useState("manual");
+
+  // Filter states
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [selectedPriceRange, setSelectedPriceRange] = useState<string>("");
 
   const handleCloseFilter = (): void => {
     setIsCloseFilter(!isCloseFilter);
@@ -30,6 +40,7 @@ export default function Sneaker() {
       setLoading(true);
       const product = await productAPI("");
       setProductDiscountList(product.data);
+      setFilteredProducts(product.data);
     } catch (error) {
       console.error("Lỗi không gọi được API", error);
     } finally {
@@ -37,9 +48,96 @@ export default function Sneaker() {
     }
   };
 
+  // Convert price string to number for comparison
+  const convertPriceToNumber = (priceStr: string): number => {
+    return Number(priceStr.replace(/[₫,]/g, ""));
+  };
+
+  // Filter products based on selected filters
+  const applyFilters = () => {
+    let filtered = [...productDiscountList];
+
+    // Filter by brand
+    if (selectedBrands.length > 0) {
+      filtered = filtered.filter((product) =>
+        selectedBrands.some(
+          (brand) =>
+            product.title.toLowerCase().includes(brand.toLowerCase()) ||
+            product.brand?.toLowerCase().includes(brand.toLowerCase())
+        )
+      );
+    }
+
+    // Filter by price range
+    if (selectedPriceRange) {
+      filtered = filtered.filter((product) => {
+        const price = convertPriceToNumber(product.priceProduct);
+        switch (selectedPriceRange) {
+          case "under-50k":
+            return price < 50000;
+          case "50k-200k":
+            return price >= 50000 && price <= 200000;
+          case "200k-400k":
+            return price >= 200000 && price <= 400000;
+          case "400k-1m":
+            return price >= 400000 && price <= 1000000;
+          case "over-1m":
+            return price > 1000000;
+          default:
+            return true;
+        }
+      });
+    }
+
+    // Apply sorting
+    switch (sortBy) {
+      case "price-ascending":
+        filtered.sort(
+          (a, b) =>
+            convertPriceToNumber(a.priceProduct) -
+            convertPriceToNumber(b.priceProduct)
+        );
+        break;
+      case "price-descending":
+        filtered.sort(
+          (a, b) =>
+            convertPriceToNumber(b.priceProduct) -
+            convertPriceToNumber(a.priceProduct)
+        );
+        break;
+      case "title-ascending":
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case "title-descending":
+        filtered.sort((a, b) => b.title.localeCompare(a.title));
+        break;
+      default:
+        break;
+    }
+
+    setFilteredProducts(filtered);
+  };
+
+  // Handle filter changes
+  const handleBrandFilter = (brands: string[]) => {
+    setSelectedBrands(brands);
+  };
+
+  const handlePriceFilter = (priceRange: string) => {
+    setSelectedPriceRange(priceRange);
+  };
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(e.target.value);
+  };
+
   useEffect(() => {
     getProduct();
   }, []);
+
+  useEffect(() => {
+    applyFilters();
+  }, [productDiscountList, selectedBrands, selectedPriceRange, sortBy]);
   if (loading) {
     return (
       <Container>
@@ -210,56 +308,20 @@ export default function Sneaker() {
                     <span className="hidden md:inline-block mr-4">
                       Sắp xếp:
                     </span>
-                    <select className="p-2 border-1 border-black outline-0">
-                      <option value="manual" data-filter="&amp;sortby=manual">
-                        Sản phẩm nổi bật
-                      </option>
-                      <option
-                        value="price-ascending"
-                        data-filter="&amp;sortby=(price:product=asc)"
-                      >
-                        Giá: Tăng dần
-                      </option>
-                      <option
-                        value="price-descending"
-                        data-filter="&amp;sortby=(price:product=desc)"
-                      >
-                        Giá: Giảm dần
-                      </option>
-                      <option
-                        value="title-ascending"
-                        data-filter="&amp;sortby=(title:product=asc)"
-                      >
-                        Tên: A-Z
-                      </option>
-                      <option
-                        value="title-descending"
-                        data-filter="&amp;sortby=(title:product=desc)"
-                      >
-                        Tên: Z-A
-                      </option>
-                      <option
-                        value="created-ascending"
-                        data-filter="&amp;sortby=(updated_at:product=desc)"
-                      >
-                        Cũ nhất
-                      </option>
-                      <option
-                        value="created-descending"
-                        data-filter="&amp;sortby=(updated_at:product=asc)"
-                      >
-                        Mới nhất
-                      </option>
-                      <option
-                        value="best-selling"
-                        data-filter="&amp;sortby=(sold_quantity:product=desc)"
-                      >
-                        Bán chạy nhất
-                      </option>
-                      <option
-                        value="quantity-descending"
-                        data-filter="&amp;sortby=(quantity:product=desc)"
-                      >
+                    <select
+                      className="p-2 border-1 border-black outline-0"
+                      value={sortBy}
+                      onChange={handleSortChange}
+                    >
+                      <option value="manual">Sản phẩm nổi bật</option>
+                      <option value="price-ascending">Giá: Tăng dần</option>
+                      <option value="price-descending">Giá: Giảm dần</option>
+                      <option value="title-ascending">Tên: A-Z</option>
+                      <option value="title-descending">Tên: Z-A</option>
+                      <option value="created-ascending">Cũ nhất</option>
+                      <option value="created-descending">Mới nhất</option>
+                      <option value="best-selling">Bán chạy nhất</option>
+                      <option value="quantity-descending">
                         Tồn kho: Giảm dần
                       </option>
                     </select>
@@ -300,19 +362,34 @@ export default function Sneaker() {
               title="Thương Hiệu"
               options={["Nike", "Adidas", "Alaia Paris", "Gucci", "Khác"]}
               borderTop={true}
+              multiSelect={true}
+              selectedValues={selectedBrands}
+              onSelect={handleBrandFilter}
             />
             {/* Lọc giá */}
             <FilterGroup
               className="mb-4 border border-gray-200 shadow"
               title="Lọc giá"
               options={[
-                " Dưới 50,000₫",
-                " 50,000₫ - 200,000₫",
-                " 200,000₫ - 400,000₫",
-                " 400,000₫ - 1,000,000₫",
-                " Trên 1,000,000₫",
+                "Dưới 50,000₫",
+                "50,000₫ - 200,000₫",
+                "200,000₫ - 400,000₫",
+                "400,000₫ - 1,000,000₫",
+                "Trên 1,000,000₫",
               ]}
               borderTop={true}
+              multiSelect={false}
+              selectedValues={selectedPriceRange ? [selectedPriceRange] : []}
+              onSingleSelect={(value) => {
+                const priceMap: { [key: string]: string } = {
+                  "Dưới 50,000₫": "under-50k",
+                  "50,000₫ - 200,000₫": "50k-200k",
+                  "200,000₫ - 400,000₫": "200k-400k",
+                  "400,000₫ - 1,000,000₫": "400k-1m",
+                  "Trên 1,000,000₫": "over-1m",
+                };
+                handlePriceFilter(priceMap[value] || "");
+              }}
             />
             {/* màu sắc */}
             <FilterGroup
@@ -398,18 +475,35 @@ export default function Sneaker() {
                             "Khác",
                           ]}
                           borderTop={true}
+                          multiSelect={true}
+                          selectedValues={selectedBrands}
+                          onSelect={handleBrandFilter}
                         />
                         {/* Lọc giá */}
                         <FilterGroup
                           title="Lọc giá"
                           options={[
-                            " Dưới 50,000₫",
-                            " 50,000₫ - 200,000₫",
-                            " 200,000₫ - 400,000₫",
-                            " 400,000₫ - 1,000,000₫",
-                            " Trên 1,000,000₫",
+                            "Dưới 50,000₫",
+                            "50,000₫ - 200,000₫",
+                            "200,000₫ - 400,000₫",
+                            "400,000₫ - 1,000,000₫",
+                            "Trên 1,000,000₫",
                           ]}
                           borderTop={true}
+                          multiSelect={false}
+                          selectedValues={
+                            selectedPriceRange ? [selectedPriceRange] : []
+                          }
+                          onSingleSelect={(value) => {
+                            const priceMap: { [key: string]: string } = {
+                              "Dưới 50,000₫": "under-50k",
+                              "50,000₫ - 200,000₫": "50k-200k",
+                              "200,000₫ - 400,000₫": "200k-400k",
+                              "400,000₫ - 1,000,000₫": "400k-1m",
+                              "Trên 1,000,000₫": "over-1m",
+                            };
+                            handlePriceFilter(priceMap[value] || "");
+                          }}
                         />
                         {/* màu sắc */}
                         <FilterGroup
@@ -444,108 +538,54 @@ export default function Sneaker() {
                 {/* sắp xếp sản phâm */}
                 <div className="">
                   <span className="hidden md:inline-block mr-4">Sắp xếp:</span>
-                  <select className="p-2 border-1 border-black outline-0">
-                    <option value="manual" data-filter="&amp;sortby=manual">
-                      Sản phẩm nổi bật
-                    </option>
-                    <option
-                      value="price-ascending"
-                      data-filter="&amp;sortby=(price:product=asc)"
-                    >
-                      Giá: Tăng dần
-                    </option>
-                    <option
-                      value="price-descending"
-                      data-filter="&amp;sortby=(price:product=desc)"
-                    >
-                      Giá: Giảm dần
-                    </option>
-                    <option
-                      value="title-ascending"
-                      data-filter="&amp;sortby=(title:product=asc)"
-                    >
-                      Tên: A-Z
-                    </option>
-                    <option
-                      value="title-descending"
-                      data-filter="&amp;sortby=(title:product=desc)"
-                    >
-                      Tên: Z-A
-                    </option>
-                    <option
-                      value="created-ascending"
-                      data-filter="&amp;sortby=(updated_at:product=desc)"
-                    >
-                      Cũ nhất
-                    </option>
-                    <option
-                      value="created-descending"
-                      data-filter="&amp;sortby=(updated_at:product=asc)"
-                    >
-                      Mới nhất
-                    </option>
-                    <option
-                      value="best-selling"
-                      data-filter="&amp;sortby=(sold_quantity:product=desc)"
-                    >
-                      Bán chạy nhất
-                    </option>
-                    <option
-                      value="quantity-descending"
-                      data-filter="&amp;sortby=(quantity:product=desc)"
-                    >
+                  <select
+                    className="p-2 border-1 border-black outline-0"
+                    value={sortBy}
+                    onChange={handleSortChange}
+                  >
+                    <option value="manual">Sản phẩm nổi bật</option>
+                    <option value="price-ascending">Giá: Tăng dần</option>
+                    <option value="price-descending">Giá: Giảm dần</option>
+                    <option value="title-ascending">Tên: A-Z</option>
+                    <option value="title-descending">Tên: Z-A</option>
+                    <option value="created-ascending">Cũ nhất</option>
+                    <option value="created-descending">Mới nhất</option>
+                    <option value="best-selling">Bán chạy nhất</option>
+                    <option value="quantity-descending">
                       Tồn kho: Giảm dần
                     </option>
                   </select>
                 </div>
               </div>
-              <div className={`grid grid-cols-2 md:grid-cols-5 gap-3.5 `}>
-                {productDiscountList.map((product) => {
-                  return (
-                    <div
-                      key={product.id}
-                      className=" w-full h-full bg-white p-2.5 cursor-pointer"
-                    >
-                      <div className="mb-4 h-[220px] relative overflow-hidden group ">
-                        <img
-                          width={260}
-                          height={260}
-                          src={product.imgA}
-                          alt={product.title.slice(-40)}
-                          className="group-hover:hidden object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  "
-                        />
-                        <img
-                          width={260}
-                          height={260}
-                          src={product.imgB}
-                          alt={product.title.slice(-40)}
-                          className="hidden group-hover:block object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  "
-                        />
-                        <div className="absolute bottom-2 right-2 z-50">
-                          <button className="group/show flex relative justify-between items-center text-white bg-shophover rounded-[50px] p-3 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.7)] transition-all duration-500 overflow-hidden cursor-pointer">
-                            <span className="absolute top-[8px] right-[-87px] whitespace-nowrap transition-all duration-500 group-hover/show:opacity-100 group-hover/show:right-[31px] ">
-                              Thêm vào giỏ
-                            </span>
-                            <span className="flex items-center justify-center transition-all duration-500 group-hover/show:pl-24">
-                              <FaCartPlus className="text-white text-xl font-bold " />
-                            </span>
-                          </button>
-                        </div>
-                      </div>
+              <div className="mb-4">
+                <p className="text-gray-600">
+                  Hiển thị {filteredProducts.length} /{" "}
+                  {productDiscountList.length} sản phẩm
+                </p>
+              </div>
 
-                      <div className="">
-                        <p className="mb-4 line-clamp-2">{product.title}</p>
-                        <span className="text-red-600 text-[13px] font-medium">
-                          {product.priceProduct}
-                        </span>
-                        <span className="text-[13px] font-medium ml-3 line-through text-gray-500">
-                          {product.discountProduct}
-                        </span>
-                      </div>
-                    </div>
+              <div className={`grid grid-cols-2 md:grid-cols-4 gap-3.5`}>
+                {filteredProducts.map((product) => {
+                  return (
+                    <Card
+                      key={product.id || Math.random()}
+                      product={{
+                        ...product,
+                        id: String(product.id || Math.random()),
+                      }}
+                      isDiscount={false}
+                    />
                   );
                 })}
               </div>
+
+              {filteredProducts.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-gray-500 text-lg">
+                    Không tìm thấy sản phẩm nào phù hợp với bộ lọc
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

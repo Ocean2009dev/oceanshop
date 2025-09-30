@@ -7,7 +7,10 @@ interface FilterGroupProps {
   borderTop?: boolean;
   options?: string[];
   valueOptions?: string[];
-  onSelect?: (value: string) => void;
+  onSelect?: (values: string[]) => void;
+  onSingleSelect?: (value: string) => void;
+  multiSelect?: boolean;
+  selectedValues?: string[];
 }
 
 export const FilterGroup: React.FC<FilterGroupProps> = ({
@@ -15,12 +18,30 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
   title = "",
   options = [],
   onSelect,
+  onSingleSelect,
   valueOptions = [],
   borderTop = false,
+  multiSelect = true,
+  selectedValues = [],
 }) => {
   const [isDownMenu, setIsDownMenu] = useState(false);
+  const [localSelected, setLocalSelected] = useState<string[]>(selectedValues);
+
   const handleShowMenu = () => {
     setIsDownMenu(!isDownMenu);
+  };
+
+  const handleOptionChange = (option: string) => {
+    if (multiSelect) {
+      const newSelected = localSelected.includes(option)
+        ? localSelected.filter((item) => item !== option)
+        : [...localSelected, option];
+
+      setLocalSelected(newSelected);
+      onSelect?.(newSelected);
+    } else {
+      onSingleSelect?.(option);
+    }
   };
   return (
     <div className={`${className} bg-white  rounded-lg overflow-hidden`}>
@@ -50,9 +71,15 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
             <li key={opt} className="flex items-center justify-between">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
-                  type="checkbox"
+                  type={multiSelect ? "checkbox" : "radio"}
+                  name={multiSelect ? undefined : title}
                   value={opt}
-                  onChange={() => onSelect?.(opt)}
+                  checked={
+                    multiSelect
+                      ? localSelected.includes(opt)
+                      : selectedValues.includes(opt)
+                  }
+                  onChange={() => handleOptionChange(opt)}
                   className="accent-black"
                 />
                 <span>{opt}</span>
