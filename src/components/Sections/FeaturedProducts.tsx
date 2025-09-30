@@ -367,10 +367,12 @@ export const CouponTable: React.FC = () => {
           {productDiscountList.map((productDiscount) => {
             return (
               <Card
-                product={productDiscount}
+                product={{
+                  ...productDiscount,
+                  id: String(productDiscount.id || Math.random()),
+                }}
                 isDiscount={true}
-                className="mx-1
-                "
+                className="mx-1"
               />
             );
           })}
@@ -629,7 +631,15 @@ export const Product: React.FC = () => {
       <div>
         <div className={`grid grid-cols-2 md:grid-cols-5 gap-3.5`}>
           {productDiscountList.map((product) => {
-            return <Card product={product} isDiscount={false} />;
+            return (
+              <Card
+                product={{
+                  ...product,
+                  id: String(product.id || Math.random()),
+                }}
+                isDiscount={false}
+              />
+            );
           })}
         </div>
       </div>

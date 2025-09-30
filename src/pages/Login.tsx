@@ -32,17 +32,19 @@ const Login: React.FC = () => {
     } catch (error: unknown) {
       console.error("Login error:", error);
 
+      const firebaseError = error as { code?: string; message?: string };
+
       // Xử lý các loại lỗi khác nhau
-      if (error.message.includes("xác minh email")) {
+      if (firebaseError.message?.includes("xác minh email")) {
         toast.error("Vui lòng xác minh email trước khi đăng nhập!");
-      } else if (error.code === "auth/user-not-found") {
+      } else if (firebaseError.code === "auth/user-not-found") {
         toast.error("Tài khoản không tồn tại");
-      } else if (error.code === "auth/wrong-password") {
+      } else if (firebaseError.code === "auth/wrong-password") {
         toast.error("Mật khẩu không đúng");
-      } else if (error.code === "auth/invalid-email") {
+      } else if (firebaseError.code === "auth/invalid-email") {
         toast.error("Email không hợp lệ");
       } else {
-        toast.error(error.message || "Đăng nhập thất bại");
+        toast.error(firebaseError.message || "Đăng nhập thất bại");
       }
     }
   };

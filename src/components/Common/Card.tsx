@@ -1,8 +1,8 @@
 import type React from "react";
-import { useContext, useState } from "react";
+import { useContext } from "react";
+import toast from "react-hot-toast";
 import { FaCartPlus } from "react-icons/fa6";
 import { CountContext } from "../../contexts/CountContext";
-import toast, { Toaster } from "react-hot-toast";
 
 interface AddToCartProps {
   product: {
@@ -15,8 +15,14 @@ interface AddToCartProps {
 }
 
 export const AddToCart: React.FC<AddToCartProps> = ({ product }) => {
-  const [add, setAdd] = useState(false);
-  const { up, down, getCount } = useContext(CountContext);
+  const context = useContext(CountContext);
+
+  if (!context) {
+    throw new Error("AddToCart must be used within CountProvider");
+  }
+
+  const { up } = context;
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -32,9 +38,7 @@ export const AddToCart: React.FC<AddToCartProps> = ({ product }) => {
     <div className="absolute bottom-2 right-2 z-50">
       <button
         onClick={handleAddToCart}
-        className={`group flex relative justify-between items-center text-white rounded-[50px] p-3 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.7)] transition-all duration-500 overflow-hidden cursor-pointer ${
-          add ? "bg-green-600" : "bg-shophover"
-        }`}
+        className="group flex relative justify-between items-center text-white rounded-[50px] p-3 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.7)] transition-all duration-500 overflow-hidden cursor-pointer bg-shophover"
       >
         <span className="absolute top-[8px] right-[-87px] whitespace-nowrap transition-all duration-500 group-hover:opacity-100 group-hover:right-[31px] text-sm">
           Thêm vào giỏ

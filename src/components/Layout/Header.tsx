@@ -293,7 +293,6 @@ export const Nav: React.FC = () => {
 
 export const HeaderTop: React.FC = () => {
   let totalItems = 0;
-  const items: unknown[] = [];
   interface City {
     id: number;
     type?: string;
@@ -460,7 +459,13 @@ export const HeaderTop: React.FC = () => {
     }
   };
 
-  const { getCount, getData } = useContext(CountContext);
+  const context = useContext(CountContext);
+
+  if (!context) {
+    throw new Error("HeaderTop must be used within CountProvider");
+  }
+
+  const { getCount, getData } = context;
   const Data = getData();
   const convertStrToNumber = (str: string) => {
     const removeCurrency = str.replace("₫", "");
@@ -471,13 +476,13 @@ export const HeaderTop: React.FC = () => {
 
     return priceNum;
   };
-  Data.forEach((n) => {
+  Data.forEach((item) => {
     totalItems =
-      totalItems + convertStrToNumber(n.priceProduct) * (n.quantity || 1);
+      totalItems + convertStrToNumber(item.priceProduct) * (item.quantity || 1);
     return totalItems;
   });
 
-  const [user, setUser] = useState<unknown>(null);
+  const [user, setUser] = useState<any>(null);
 
   const handleLogOut = async () => {
     try {

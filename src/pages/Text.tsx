@@ -1,12 +1,25 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import Container from "../components/Layout/Container";
 import { CountContext } from "../contexts/CountContext";
 
 const Text = () => {
-  const { up, down, count } = useContext(CountContext);
+  const context = useContext(CountContext);
+
+  if (!context) {
+    throw new Error("Text must be used within CountProvider");
+  }
+
+  const { up, down, count } = context;
 
   const increment = () => {
-    up();
+    // up function now requires a product parameter, so we'll create a dummy product
+    const dummyProduct = {
+      id: `dummy-${Date.now()}`,
+      title: "Test Product",
+      priceProduct: "100,000₫",
+      imgA: "https://via.placeholder.com/150",
+    };
+    up(dummyProduct);
   };
 
   const decrement = () => {
