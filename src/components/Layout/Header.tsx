@@ -1,20 +1,23 @@
 import type React from "react";
-import Container from "./Container";
+import { useContext, useEffect, useMemo, useState } from "react";
 import {
   FaAngleDown,
   FaAngleRight,
   FaBars,
   FaCartShopping,
+  FaFaceGrinSquint,
   FaLocationDot,
   FaPhone,
   FaSistrix,
   FaUser,
   FaX,
 } from "react-icons/fa6";
-import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import SearchBox from "../Common/sreachBox";
 import { productAPI } from "../../api/product";
+import { CountContext } from "../../contexts/CountContext";
+import { logout, onAuthStateChange } from "../../services/authService";
+import SearchBox from "../Common/sreachBox";
+import Container from "./Container";
 
 interface ProductItem {
   id: string;
@@ -24,6 +27,7 @@ interface ProductItem {
   discountProduct?: string;
   price?: number;
   originalPrice?: number;
+  quantity?: number;
 }
 
 export const MenuSubAdidas: React.FC = () => {
@@ -288,6 +292,8 @@ export const Nav: React.FC = () => {
 };
 
 export const HeaderTop: React.FC = () => {
+  let totalItems = 0;
+  const items: unknown[] = [];
   interface City {
     id: number;
     type?: string;
@@ -402,10 +408,6 @@ export const HeaderTop: React.FC = () => {
     setMenu(!menu);
   };
 
-  const handleSubmit = (e: React.FormEvent): void => {
-    e.preventDefault();
-  };
-
   useEffect(() => {
     fectchData("");
 
@@ -415,6 +417,15 @@ export const HeaderTop: React.FC = () => {
     }, 3000);
     return () => clearInterval(timer);
   }, [shoesList]);
+
+  // Theo dõi trạng thái đăng nhập
+  useEffect(() => {
+    const unsubscribe = onAuthStateChange((currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // handle filter location
   const handleFilterLocation = (
@@ -446,6 +457,35 @@ export const HeaderTop: React.FC = () => {
     } catch (error) {
       console.error("Không thể call API:", error);
       SetData([]);
+    }
+  };
+
+  const { getCount, getData } = useContext(CountContext);
+  const Data = getData();
+  const convertStrToNumber = (str: string) => {
+    const removeCurrency = str.replace("₫", "");
+
+    const removeComma = removeCurrency.replaceAll(",", "");
+
+    const priceNum = Number(removeComma);
+
+    return priceNum;
+  };
+  Data.forEach((n) => {
+    totalItems =
+      totalItems + convertStrToNumber(n.priceProduct) * (n.quantity || 1);
+    return totalItems;
+  });
+
+  const [user, setUser] = useState<unknown>(null);
+
+  const handleLogOut = async () => {
+    try {
+      await logout();
+      setUser(null);
+      setShowUser(false);
+    } catch (error) {
+      console.error("Lỗi đăng xuất:", error);
     }
   };
 
@@ -645,59 +685,74 @@ export const HeaderTop: React.FC = () => {
             )}
 
             {/* đăng nhập */}
-            <div className="flex items-center ml-4" onClick={handleLogin}>
-              <FaUser className="w-6 h-6" />
-
-              <div className="hidden md:block ml-4">
-                <span>Đăng Nhập</span>
+            {user ? (
+              <div className="ml-4 group relative">
                 <div className="flex items-center">
-                  <span className="mr-0.5">Đăng Ký</span>
-                  <FaAngleDown />
+                  <FaFaceGrinSquint className="w-6 h-6 text-green-400 animate-spin" />
+
+                  <div className="hidden md:block ml-4">
+                    <span className="text-sm">Xin chào!</span>
+                    <div className="flex items-center">
+                      <span className="mr-0.5 text-sm font-medium">
+                        {user.email?.split("@")[0] || "User"}
+                      </span>
+                      <FaAngleDown />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group-hover:block hidden absolute top-10 left-[-100px] md:left-0 z-100 bg-white shadow-xl rounded-lg border">
+                  <div className="p-4 min-w-[200px]">
+                    <div className="text-black mb-3 pb-3 border-b">
+                      <p className="font-medium">
+                        {user.displayName || "Người dùng"}
+                      </p>
+                      <p className="text-sm text-gray-600">{user.email}</p>
+                    </div>
+                    <button
+                      onClick={handleLogOut}
+                      className="w-full text-left px-3 py-2 text-red-600 hover:bg-red-50 rounded transition-colors"
+                    >
+                      Đăng xuất
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center ml-4" onClick={handleLogin}>
+                <FaUser className="w-6 h-6" />
+
+                <div className="hidden md:block ml-4">
+                  <span>Đăng Nhập</span>
+                  <div className="flex items-center">
+                    <span className="mr-0.5">Đăng Ký</span>
+                    <FaAngleDown />
+                  </div>
+                </div>
+              </div>
+            )}
 
             {showUser && (
               <div className="w-[433px] py-2.5 px-5 shadow-2xl bg-white text-black absolute top-10 left-[-284px] md:top-14 md:left-0 z-100 transform scale-100 transition duration-700 ease-in ">
                 <h1 className="text-center font-semibold  uppercase ">
-                  Đăng Nhập tài khoản
+                  Đăng Nhập và Đăng ký
                 </h1>
-                <p className="text-center ">Nhập email và mật khẩu của bạn:</p>
 
-                <form action="" className="mt-4">
-                  <div className="flex flex-col">
-                    <input
-                      type="text"
-                      placeholder="Nhập Email"
-                      className="px-5 py-2.5 w-full border border-content mb-2 outline-0"
-                    />
-                    <input
-                      type="password"
-                      placeholder="Nhập Mật Khẩu"
-                      className="px-5 py-2.5 w-full border border-content mb-2 outline-0"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="px-5 py-2.5 w-full bg-black text-white mb-2 outline-0 cursor-pointer"
-                    onClick={handleSubmit}
+                <div className="flex flex-col mt-4 space-y-2">
+                  <Link
+                    to="/login"
+                    className="px-5 py-2.5 w-full bg-black text-white text-center outline-0 cursor-pointer hover:bg-gray-800 transition-colors"
+                    onClick={() => setShowUser(false)}
                   >
-                    Đăng Nhập
-                  </button>
-                </form>
-
-                <div>
-                  <p className="mb-3">
-                    <span>Khách hàng tạo mới? </span>
-                    <Link to={"/signup"} onClick={handleLogin}>
-                      Tạo tài khoản
-                    </Link>
-                  </p>
-                  <p>
-                    <span>Quên mật khẩu? </span>
-                    <a href="">Khôi phục mật khẩu</a>
-                  </p>
+                    Đăng nhập
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="px-5 py-2.5 w-full bg-black text-white text-center outline-0 cursor-pointer hover:bg-gray-800 transition-colors"
+                    onClick={() => setShowUser(false)}
+                  >
+                    Đăng ký
+                  </Link>
                 </div>
               </div>
             )}
@@ -707,7 +762,7 @@ export const HeaderTop: React.FC = () => {
               <div className="relative">
                 <FaCartShopping className="w-6 h-6 " />
                 <div className="bg-white text-black text-[10px] font-bold absolute -top-2 left-4 w-5 h-5 rounded-[50px] flex items-center justify-center whitespace-nowrap overflow-hidden">
-                  {Number(localStorage.getItem("product")) || 0}
+                  {getCount() || 0}
                 </div>
               </div>
               <div className="hidden md:block ml-4">Giỏ Hàng</div>
@@ -719,15 +774,39 @@ export const HeaderTop: React.FC = () => {
                     Giỏ hàng
                   </h1>
 
-                  <div
-                    id="data-cart"
-                    className="flex flex-col items-center justify-center"
-                  >
-                    <img
-                      src="https://res.cloudinary.com/ds6vqu3dy/image/upload/v1754296259/cart_zyxa8k.png"
-                      alt="cart"
-                    />
-                    <p>Hiện chưa có sản phẩm</p>
+                  <div id="data-cart" className="max-h-60 overflow-y-auto">
+                    {Data.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center">
+                        <img
+                          src="https://res.cloudinary.com/ds6vqu3dy/image/upload/v1754296259/cart_zyxa8k.png"
+                          alt="cart"
+                        />
+                        <p>Hiện chưa có sản phẩm</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3 overflow-hidden">
+                        {Data.map((item) => (
+                          <div
+                            key={item.id}
+                            className="flex items-center gap-3 p-2 bg-gray-50 rounded"
+                          >
+                            <img
+                              src={item.imgA}
+                              alt={item.title}
+                              className="w-12 h-12 object-cover rounded"
+                            />
+                            <div className="flex-1">
+                              <h4 className="text-sm font-medium line-clamp-1">
+                                {item.title}
+                              </h4>
+                              <p className="text-xs text-gray-600">
+                                {item.priceProduct} x {item.quantity || 1}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -736,7 +815,9 @@ export const HeaderTop: React.FC = () => {
                     <h1 className="text-2xl font-semibold uppercase">
                       Tổng tiền
                     </h1>
-                    <p className="text-2xl text-red-600">0Đ</p>
+                    <p className="text-2xl text-red-600">
+                      {totalItems.toLocaleString("vi-VN")}đ
+                    </p>
                   </div>
                   <div className="flex justify-between gap-3">
                     <button className="p-3 border-[1px] w-full outline-0 uppercase font-bold cursor-pointer bg-black text-white hover:bg-white hover:text-black">

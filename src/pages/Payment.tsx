@@ -1,7 +1,7 @@
+import { useContext, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import Container from "../components/Layout/Container";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { CountContext } from "../contexts/CountContext";
 
 export const Payment = () => {
   const [formData, setFormData] = useState({
@@ -60,43 +60,75 @@ export const Payment = () => {
   const handlePayment = async () => {
     if (!validateForm()) return;
 
+    if (cartData.length === 0) {
+      alert("Giỏ hàng trống! Vui lòng thêm sản phẩm trước khi thanh toán.");
+      return;
+    }
+
     setIsProcessing(true);
+
+    // Tạo thông tin đơn hàng
+    const orderData = {
+      customerInfo: formData,
+      items: cartData,
+      subtotal: calculateSubtotal(),
+      vat: calculateVAT(),
+      total: calculateTotal(),
+      orderDate: new Date().toISOString(),
+    };
 
     // Giả lập xử lý thanh toán
     setTimeout(() => {
+      console.log("Order Data:", orderData);
       // Chuyển hướng đến VNPay (giả lập)
-      alert("Đang chuyển hướng đến VNPay...");
+      const success = confirm(
+        `Thanh toán thành công!\nTổng tiền: ${calculateTotal().toLocaleString(
+          "vi-VN"
+        )}₫\n\nBạn có muốn xóa giỏ hàng không?`
+      );
+
+      if (success) {
+        clearCart();
+        alert("Cảm ơn bạn đã mua hàng! Giỏ hàng đã được xóa.");
+      }
+
       setIsProcessing(false);
+
+      // Có thể clear giỏ hàng sau khi thanh toán thành công
+      // clearCart();
     }, 2000);
   };
 
-  interface ProductData {
-    id: string;
-    title: string;
-    imgA: string;
-    priceProduct?: string;
-    discountProduct?: string;
-    price?: number;
-    originalPrice?: number;
+  const context = useContext(CountContext);
+  if (!context) {
+    throw new Error("Payment must be used within CountProvider");
   }
-  const location = useLocation();
-  const [productData, setProductData] = useState<ProductData | null>(null);
-  const vat: number = 120;
-  // GetData
-  useEffect(() => {
-    console.log(location.state.productData);
-    setProductData(location.state.productData);
-  }, [location.state]);
 
-  const priceOrder = () => {
-    const priceProduct =
-      Number(
-        productData?.priceProduct
-          ?.slice(0, productData?.priceProduct?.length - 1)
-          .replaceAll(",", "")
-      ) - vat;
+  const { getData, clearCart, removeItem } = context;
+  const cartData = getData();
+  const vatRate = 0.1; // 10% VAT
 
-    return priceProduct.toLocaleString("vi-VN");
+  const convertStrToNumber = (str: string) => {
+    const removeCurrency = str.replace("₫", "");
+    const removeComma = removeCurrency.replaceAll(",", "");
+    return Number(removeComma);
+  };
+
+  const calculateSubtotal = () => {
+    return cartData.reduce((total, item) => {
+      return (
+        total +
+        convertStrToNumber(item.priceProduct || "0") * (item.quantity || 1)
+      );
+    }, 0);
+  };
+
+  const calculateVAT = () => {
+    return calculateSubtotal() * vatRate;
+  };
+
+  const calculateTotal = () => {
+    return calculateSubtotal() + calculateVAT();
   };
   return (
     <>
@@ -122,28 +154,55 @@ export const Payment = () => {
                 </h2>
 
                 <div className="space-y-4 mb-6">
-                  <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                    <div className="w-16 h-16  rounded-lg flex items-center justify-center">
-                      <img src={productData?.imgA} alt={productData?.title} />
+                  {cartData.length === 0 ? (
+                    <div className="text-center py-8">
+                      <p className="text-gray-500">Giỏ hàng trống</p>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-800">
-                        {productData?.title}
-                      </h3>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-gray-800">
-                        {productData?.priceProduct}
-                      </p>
-                      <p className="text-sm text-gray-500">x1</p>
-                    </div>
-                  </div>
+                  ) : (
+                    cartData.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg"
+                      >
+                        <div className="w-16 h-16 rounded-lg flex items-center justify-center">
+                          <img
+                            src={item.imgA}
+                            alt={item.title}
+                            className="w-full h-full object-cover rounded-lg"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-800">
+                            {item.title}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {item.priceProduct} x {item.quantity || 1}
+                          </p>
+                        </div>
+                        <div className="text-right flex flex-col items-end">
+                          <p className="font-bold text-gray-800 mb-2">
+                            {(
+                              convertStrToNumber(item.priceProduct || "0") *
+                              (item.quantity || 1)
+                            ).toLocaleString("vi-VN")}
+                            ₫
+                          </p>
+                          <button
+                            onClick={() => removeItem(item.id)}
+                            className="text-red-500 hover:text-red-700 text-sm underline"
+                          >
+                            Xóa
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
 
                 <div className="border-t pt-4 space-y-2">
                   <div className="flex justify-between text-gray-600">
                     <span>Tạm tính</span>
-                    <span>{productData?.priceProduct}</span>
+                    <span>{calculateSubtotal().toLocaleString("vi-VN")}₫</span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Phí vận chuyển</span>
@@ -151,11 +210,11 @@ export const Payment = () => {
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>VAT (10%)</span>
-                    <span>{vat}</span>
+                    <span>{calculateVAT().toLocaleString("vi-VN")}₫</span>
                   </div>
                   <div className="border-t pt-2 flex justify-between text-xl font-bold text-gray-800">
                     <span>Tổng cộng</span>
-                    <span>{priceOrder()}</span>
+                    <span>{calculateTotal().toLocaleString("vi-VN")}₫</span>
                   </div>
                 </div>
 
@@ -305,7 +364,8 @@ export const Payment = () => {
                     </div>
                   ) : (
                     <div className="flex items-center justify-center">
-                      Tiếp tục thanh toán 1.320.000₫
+                      Tiếp tục thanh toán{" "}
+                      {calculateTotal().toLocaleString("vi-VN")}₫
                     </div>
                   )}
                 </button>

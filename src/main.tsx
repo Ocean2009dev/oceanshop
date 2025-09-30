@@ -1,16 +1,18 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./styles/global.css";
-import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import NotFound from "./pages/NotFound.tsx";
-import Sneaker from "./pages/Sneaker.tsx";
-import Home from "./pages/Home.tsx";
+import App from "./App.tsx";
 import Contact from "./pages/Contact.tsx";
 import Features from "./pages/Features.tsx";
-import { SignIn, SignUp } from "./pages/Login.tsx";
+import Home from "./pages/Home.tsx";
+import Login from "./pages/Login.tsx";
+import NotFound from "./pages/NotFound.tsx";
 import { Payment } from "./pages/Payment.tsx";
 import Product from "./pages/Product.tsx";
+import Sneaker from "./pages/Sneaker.tsx";
+import Text from "./pages/Text.tsx";
+import "./styles/global.css";
+import Signup from "./pages/Signup.tsx";
 
 const router = createBrowserRouter([
   {
@@ -18,37 +20,56 @@ const router = createBrowserRouter([
     element: <App />,
     errorElement: <NotFound />,
     children: [
+      // Home page
       {
         index: true,
         element: <Home />,
       },
+
+      // Product pages
       {
-        path: "/sneaker",
+        path: "sneaker",
         element: <Sneaker />,
       },
       {
-        path: "/contact",
+        path: "product/:title",
+        element: <Product />,
+      },
+
+      // Auth pages
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "signup",
+        element: <Signup />,
+      },
+
+      // Other pages
+      {
+        path: "contact",
         element: <Contact />,
       },
       {
-        path: "/features",
+        path: "features",
         element: <Features />,
       },
+
+      // Legacy route redirect
       {
-        path: "/signup",
-        element: <SignUp />,
-      },
-      {
-        path: "/signin",
-        element: <SignIn />,
-      },
-      {
-        path: "/pay",
+        path: "pay",
         element: <Payment />,
       },
+
+      // Catch all 404
       {
-        path: "/product/:title",
-        element: <Product />,
+        path: "*",
+        element: <NotFound />,
+      },
+      {
+        path: "text",
+        element: <Text />,
       },
     ],
   },

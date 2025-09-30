@@ -7,8 +7,8 @@ const HeroSection: React.FC = () => {
     <div className="w-full md:pt-6">
       <CouponCarousel autoSlide={true}>
         <img
-          className="w-full"
-          src="https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753844123/slider-2_0521f8e897684645afb606cebb3d0716_master_f8hhps.jpg"
+          className="w-full "
+          src="https://res.cloudinary.com/ds6vqu3dy/image/upload/v1759235582/Gemini_Generated_Image_7vwxit7vwxit7vwx_vlglo8.png"
           alt=""
         />
         <img

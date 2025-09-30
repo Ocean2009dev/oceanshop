@@ -1,343 +1,143 @@
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import type React from "react";
-import { useState } from "react";
-import { FaReply } from "react-icons/fa6";
-import {
-  AuthLayout,
-  AuthInput,
-  AuthButton,
-  AuthForm,
-} from "../components/Auth";
+import { signInWithEmail } from "../services/authService";
 
-export const SignIn: React.FC = () => {
+const Login: React.FC = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-    general: "",
-  });
 
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    // Xóa lỗi khi người dùng bắt đầu nhập lại
-    if (errors[field as keyof typeof errors]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }));
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      const userCurrent = await signInWithEmail(
+        formData.email,
+        formData.password
+      );
 
-    // Reset errors
-    setErrors({ email: "", password: "", general: "" });
+      if (userCurrent) {
+        toast.success("Đăng nhập thành công");
+        window.location.href = "/";
+      }
+    } catch (error: unknown) {
+      console.error("Login error:", error);
 
-    let hasErrors = false;
-    const newErrors = { email: "", password: "", general: "" };
-
-    // Validate email
-    if (!formData.email) {
-      newErrors.email = "Vui lòng nhập email";
-      hasErrors = true;
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = "Email không hợp lệ";
-      hasErrors = true;
+      // Xử lý các loại lỗi khác nhau
+      if (error.message.includes("xác minh email")) {
+        toast.error("Vui lòng xác minh email trước khi đăng nhập!");
+      } else if (error.code === "auth/user-not-found") {
+        toast.error("Tài khoản không tồn tại");
+      } else if (error.code === "auth/wrong-password") {
+        toast.error("Mật khẩu không đúng");
+      } else if (error.code === "auth/invalid-email") {
+        toast.error("Email không hợp lệ");
+      } else {
+        toast.error(error.message || "Đăng nhập thất bại");
+      }
     }
-
-    // Validate password
-    if (!formData.password) {
-      newErrors.password = "Vui lòng nhập mật khẩu";
-      hasErrors = true;
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
-      hasErrors = true;
-    }
-
-    if (hasErrors) {
-      setErrors(newErrors);
-      return;
-    }
-
-    // Simulate login logic
-    console.log("Login submitted", formData);
-
-    // Giả lập lỗi đăng nhập (có thể thay bằng API call thực tế)
-    if (
-      formData.email !== "test@example.com" ||
-      formData.password !== "123456"
-    ) {
-      setErrors((prev) => ({
-        ...prev,
-        general: "Email hoặc mật khẩu không đúng",
-      }));
-      return;
-    }
-
-    // Xong khi đang nhập thành công
-    window.location.href = "/";
-
-    // Đăng nhập thành công
-    alert("Đăng nhập thành công!");
   };
 
   return (
-    <AuthLayout title="Đăng nhập" breadcrumbText="Đăng nhập">
-      <AuthForm onSubmit={handleSubmit}>
-        {errors.general && (
-          <div className="mb-3 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-            {errors.general}
-          </div>
-        )}
-
-        <div className="mb-3">
-          <AuthInput
-            type="email"
-            placeholder="Nhập Email"
-            value={formData.email}
-            onChange={(e) => handleInputChange("email", e.target.value)}
-            className={errors.email ? "border-red-500" : ""}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-          )}
-        </div>
-
-        <div className="mb-3">
-          <AuthInput
-            type="password"
-            placeholder="Nhập Mật Khẩu"
-            value={formData.password}
-            onChange={(e) => handleInputChange("password", e.target.value)}
-            className={errors.password ? "border-red-500" : ""}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-          )}
-        </div>
-
-        <div className="flex justify-center items-center flex-col">
-          <AuthButton type="submit" variant="primary" className="mb-2">
-            Đăng nhập
-          </AuthButton>
-
-          <AuthButton variant="secondary">
-            <Link to={"/signup"} className="flex items-center">
-              Đăng ký
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Đăng nhập tài khoản
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Hoặc{" "}
+            <Link
+              to="/signup"
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+            >
+              tạo tài khoản mới
             </Link>
-          </AuthButton>
+          </p>
         </div>
-      </AuthForm>
-    </AuthLayout>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="rounded-md shadow-sm -space-y-px">
+            <div>
+              <label htmlFor="email" className="sr-only">
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Địa chỉ email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="sr-only">
+                Mật khẩu
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Mật khẩu"
+                value={formData.password}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              />
+              <label
+                htmlFor="remember-me"
+                className="ml-2 block text-sm text-gray-900"
+              >
+                Ghi nhớ đăng nhập
+              </label>
+            </div>
+
+            <div className="text-sm">
+              <a
+                href="#"
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                Quên mật khẩu?
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Đăng nhập
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
-export const SignUp: React.FC = () => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    password: "",
-  });
-  const [errors, setErrors] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    password: "",
-    general: "",
-  });
 
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validatePhone = (phone: string) => {
-    const phoneRegex = /^[0-9]{10,11}$/;
-    return phoneRegex.test(phone);
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    // Xóa lỗi khi người dùng bắt đầu nhập lại
-    if (errors[field as keyof typeof errors]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }));
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Reset errors
-    setErrors({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      password: "",
-      general: "",
-    });
-
-    let hasErrors = false;
-    const newErrors = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      password: "",
-      general: "",
-    };
-
-    // Validate firstName
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = "Vui lòng nhập họ";
-      hasErrors = true;
-    }
-
-    // Validate lastName
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = "Vui lòng nhập tên";
-      hasErrors = true;
-    }
-
-    // Validate email
-    if (!formData.email) {
-      newErrors.email = "Vui lòng nhập email";
-      hasErrors = true;
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = "Email không hợp lệ";
-      hasErrors = true;
-    }
-
-    // Validate phone
-    if (!formData.phone) {
-      newErrors.phone = "Vui lòng nhập số điện thoại";
-      hasErrors = true;
-    } else if (!validatePhone(formData.phone)) {
-      newErrors.phone = "Số điện thoại phải có 10-11 chữ số";
-      hasErrors = true;
-    }
-
-    // Validate password
-    if (!formData.password) {
-      newErrors.password = "Vui lòng nhập mật khẩu";
-      hasErrors = true;
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
-      hasErrors = true;
-    }
-
-    if (hasErrors) {
-      setErrors(newErrors);
-      return;
-    }
-
-    // Simulate signup logic
-    console.log("Signup submitted", formData);
-
-    // Giả lập kiểm tra email đã tồn tại
-    if (formData.email === "existing@example.com") {
-      setErrors((prev) => ({ ...prev, general: "Email này đã được sử dụng" }));
-      return;
-    }
-
-    // Đăng ký thành công
-    alert("Đăng ký thành công!");
-  };
-
-  return (
-    <AuthLayout title="Tạo tài khoản" breadcrumbText="Đăng Ký">
-      <AuthForm onSubmit={handleSubmit}>
-        {errors.general && (
-          <div className="mb-3 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-            {errors.general}
-          </div>
-        )}
-
-        <div className="mb-3">
-          <AuthInput
-            type="text"
-            placeholder="Nhập Họ"
-            value={formData.firstName}
-            onChange={(e) => handleInputChange("firstName", e.target.value)}
-            className={errors.firstName ? "border-red-500" : ""}
-          />
-          {errors.firstName && (
-            <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
-          )}
-        </div>
-
-        <div className="mb-3">
-          <AuthInput
-            type="text"
-            placeholder="Nhập Tên"
-            value={formData.lastName}
-            onChange={(e) => handleInputChange("lastName", e.target.value)}
-            className={errors.lastName ? "border-red-500" : ""}
-          />
-          {errors.lastName && (
-            <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
-          )}
-        </div>
-
-        <div className="mb-3">
-          <AuthInput
-            type="email"
-            placeholder="Nhập Email"
-            value={formData.email}
-            onChange={(e) => handleInputChange("email", e.target.value)}
-            className={errors.email ? "border-red-500" : ""}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-          )}
-        </div>
-
-        <div className="mb-3">
-          <AuthInput
-            type="text"
-            placeholder="Nhập số điện thoại"
-            value={formData.phone}
-            onChange={(e) => handleInputChange("phone", e.target.value)}
-            className={errors.phone ? "border-red-500" : ""}
-          />
-          {errors.phone && (
-            <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
-          )}
-        </div>
-
-        <div className="mb-3">
-          <AuthInput
-            type="password"
-            placeholder="Nhập Mật Khẩu"
-            value={formData.password}
-            onChange={(e) => handleInputChange("password", e.target.value)}
-            className={errors.password ? "border-red-500" : ""}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-          )}
-        </div>
-
-        <div className="flex justify-center items-center flex-col">
-          <AuthButton type="submit" variant="primary" className="mb-2">
-            Đăng Ký
-          </AuthButton>
-
-          <AuthButton variant="secondary">
-            <Link to={"/signin"} className="flex items-center">
-              <FaReply className="mr-2" /> Quay lại đăng nhập
-            </Link>
-          </AuthButton>
-        </div>
-      </AuthForm>
-    </AuthLayout>
-  );
-};
+export default Login;
