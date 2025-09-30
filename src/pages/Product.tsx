@@ -1,7 +1,9 @@
 import type React from "react";
 import Container from "../components/Layout/Container";
 import { Link, useParams, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { CountContext } from "../contexts/CountContext";
+import toast from "react-hot-toast";
 
 interface ProductData {
   id: string;
@@ -16,6 +18,13 @@ interface ProductData {
 const Product = (): React.ReactElement => {
   const { title } = useParams<{ title: string }>();
   const location = useLocation();
+  const context = useContext(CountContext);
+
+  if (!context) {
+    throw new Error("Product must be used within CountProvider");
+  }
+
+  const { up } = context;
   const [decodedTitle, setDecodedTitle] = useState<string>("");
   const [productData, setProductData] = useState<ProductData | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>("36");
@@ -73,6 +82,26 @@ const Product = (): React.ReactElement => {
 
   const handleQuantityChange = (change: number) => {
     setQuantity((prev) => Math.max(1, prev + change));
+  };
+
+  const handleAddToCart = () => {
+    if (!productData) return;
+
+    // Add multiple items based on quantity
+    for (let i = 0; i < quantity; i++) {
+      up({
+        id: productData.id,
+        title: productData.title,
+        priceProduct: productData.priceProduct || "0₫",
+        discountProduct: productData.discountProduct,
+        imgA: productData.imgA,
+      });
+    }
+
+    toast.success(`Đã thêm ${quantity} sản phẩm vào giỏ hàng!`, {
+      icon: "🛒",
+      duration: 2000,
+    });
   };
 
   return (
@@ -183,11 +212,13 @@ const Product = (): React.ReactElement => {
                 {/* Price */}
                 <div className="flex items-center gap-4">
                   <span className="text-3xl font-bold text-red-600">
-                    3.900.000đ
+                    {productData.priceProduct || "Liên hệ"}
                   </span>
-                  <span className="text-lg text-gray-500 line-through">
-                    4.500.000đ
-                  </span>
+                  {productData.discountProduct && (
+                    <span className="text-lg text-gray-500 line-through">
+                      {productData.discountProduct}
+                    </span>
+                  )}
                 </div>
 
                 {/* Countdown Timer */}
@@ -288,14 +319,19 @@ const Product = (): React.ReactElement => {
                   </div>
 
                   <div className="flex gap-3">
-                    <button className="flex-1 bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                    <button
+                      onClick={handleAddToCart}
+                      className="flex-1 bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                    >
                       Thêm vào giỏ
                     </button>
-                    <button className="flex-1 bg-white border border-blue-600 text-blue-600 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors">
-                      <Link to={"/pay"} state={{ productData: productData }}>
-                        Mua ngay
-                      </Link>
-                    </button>
+                    <Link
+                      to="/pay"
+                      state={{ productData: productData }}
+                      className="flex-1 bg-white border border-blue-600 text-blue-600 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors text-center block"
+                    >
+                      Mua ngay
+                    </Link>
                   </div>
                 </div>
 

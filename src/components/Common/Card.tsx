@@ -2,6 +2,7 @@ import type React from "react";
 import { useContext } from "react";
 import toast from "react-hot-toast";
 import { FaCartPlus } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 import { CountContext } from "../../contexts/CountContext";
 
 interface AddToCartProps {
@@ -35,10 +36,10 @@ export const AddToCart: React.FC<AddToCartProps> = ({ product }) => {
   };
 
   return (
-    <div className="absolute bottom-2 right-2 z-50">
+    <div className="absolute bottom-2 right-2 z-50 add-to-cart-button">
       <button
         onClick={handleAddToCart}
-        className="group flex relative justify-between items-center text-white rounded-[50px] p-3 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.7)] transition-all duration-500 overflow-hidden cursor-pointer bg-shophover"
+        className="group flex relative justify-between items-center text-white rounded-[50px] p-3 shadow-[0_10px_20px_-8px_rgba(0,0,0,0.7)] transition-all duration-500 overflow-hidden cursor-pointer bg-shophover add-to-cart-button"
       >
         <span className="absolute top-[8px] right-[-87px] whitespace-nowrap transition-all duration-500 group-hover:opacity-100 group-hover:right-[31px] text-sm">
           Thêm vào giỏ
@@ -71,12 +72,35 @@ export const Card: React.FC<CardProps> = ({
   isDiscount = false,
   className,
 }) => {
+  const navigate = useNavigate();
+
+  // Create URL-friendly title for navigation
+  const createProductUrl = (title: string) => {
+    return encodeURIComponent(title.replace(/[^a-zA-Z0-9\s]/g, "").trim());
+  };
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Prevent navigation if clicking on AddToCart button
+    const target = e.target as HTMLElement;
+    if (target.closest(".add-to-cart-button")) {
+      return;
+    }
+
+    console.log(
+      "Card clicked, navigating to:",
+      `/product/${createProductUrl(product.title)}`
+    );
+    navigate(`/product/${createProductUrl(product.title)}`, {
+      state: { productData: product },
+    });
+  };
+
   return (
     <div
-      key={product.id}
-      className={`${className} bg-white h-full p-2 rounded-5px cursor-pointer overflow-hidden`}
+      onClick={handleCardClick}
+      className={`${className} bg-white h-full p-2 rounded-5px cursor-pointer overflow-hidden hover:shadow-lg transition-shadow duration-300`}
     >
-      <div className=" h-[240px] relative overflow-hidden group/img ">
+      <div className="h-[240px] relative overflow-hidden group/img">
         {isDiscount && (
           <img
             src="https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876861/frameMain.png_scqpda.webp"
@@ -88,7 +112,7 @@ export const Card: React.FC<CardProps> = ({
         <img
           src={product.imgA}
           alt={product.title.slice(1, product.title.length - 44)}
-          className="group-hover/img:hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0  transition-all ease-in-out duration-700 delay-700"
+          className="group-hover/img:hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 transition-all ease-in-out duration-700 delay-700"
         />
 
         <img
@@ -104,10 +128,10 @@ export const Card: React.FC<CardProps> = ({
       </h3>
 
       <div className="flex items-center gap-3 mt-2 overflow-hidden">
-        <span className="text-[13px] font-medium  text-red-600 truncate  max-w-[50%]">
+        <span className="text-[13px] font-medium text-red-600 truncate max-w-[50%]">
           {product.priceProduct}
         </span>
-        <span className="text-[13px] font-medium ml-3 line-through text-gray-500 truncate max-w-[50%] ">
+        <span className="text-[13px] font-medium ml-3 line-through text-gray-500 truncate max-w-[50%]">
           {product.discountProduct}
         </span>
       </div>

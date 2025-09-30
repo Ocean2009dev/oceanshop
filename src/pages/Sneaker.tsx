@@ -355,13 +355,6 @@ export default function Sneaker() {
         <div className="flex flex-col md:flex-row gap-4 h-full pb-4">
           {/* Bộ lọc desktop */}
           <div className="hidden md:block w-full md:w-1/4 flex-shrink-0">
-            {/* Lọc sản phẩm */}
-            <FilterGroup
-              className="mb-4 border border-gray-200 shadow"
-              title="Danh mục sản phẩm"
-              options={["Sneaker", "Nike", "Adidas"]}
-              valueOptions={["{450}", "{223}", "{1423}"]}
-            />
             {/* Lọc thương hiệu */}
             <FilterGroup
               className="mb-4 border border-gray-200 shadow"
@@ -464,12 +457,6 @@ export default function Sneaker() {
                         <FaX className="text-2xl" />
                       </div>
                       <div>
-                        {/* Lọc sản phẩm */}
-                        <FilterGroup
-                          title="Danh mục sản phẩm"
-                          options={["Sneaker", "Sandals", "Boots"]}
-                          valueOptions={["{123}", "{123}", "{123}"]}
-                        />
                         {/* Lọc thương hiệu */}
                         <FilterGroup
                           title="Thương Hiệu"
@@ -578,6 +565,7 @@ export default function Sneaker() {
                       product={{
                         ...product,
                         id: String(product.id || Math.random()),
+                        imgB: product.imgA, // Use imgA as fallback for imgB
                       }}
                       isDiscount={false}
                     />
