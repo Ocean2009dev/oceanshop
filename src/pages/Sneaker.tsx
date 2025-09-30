@@ -137,7 +137,13 @@ export default function Sneaker() {
 
   useEffect(() => {
     applyFilters();
-  }, [productDiscountList, selectedBrands, selectedPriceRange, sortBy]);
+  }, [
+    applyFilters,
+    productDiscountList,
+    selectedBrands,
+    selectedPriceRange,
+    sortBy,
+  ]);
   if (loading) {
     return (
       <Container>
