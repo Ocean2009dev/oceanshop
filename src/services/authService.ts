@@ -7,11 +7,12 @@ const auth = getAuth(app);
 export const signup = async (email: string, password: string) => {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        console.log("Đăng ký thành công")
+        console.log("Đăng ký thành công:", userCredential.user.email);
         return userCredential.user;
     } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : 'Lỗi không xác định';
-        throw new Error(`Lỗi đăng ký: ${message}`);
+        console.error("Signup error:", error);
+        // Don't wrap the error, let Firebase error codes pass through
+        throw error;
     }
 };
 

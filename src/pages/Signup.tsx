@@ -10,6 +10,7 @@ const Signup: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -19,18 +20,53 @@ const Signup: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
       toast.error("Mật khẩu không khớp");
       return;
     }
-    signup(formData.email, formData.password);
-    // Xử lý đăng ký ở đây
-    // localStorage.setItem("user", JSON.stringify(formData));
-    toast.success("Đăng ký thành công");
 
-    window.location.href = "/login";
+    if (formData.password.length < 6) {
+      toast.error("Mật khẩu phải có ít nhất 6 ký tự");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      await signup(formData.email, formData.password);
+      toast.success("Đăng ký thành công! Vui lòng đăng nhập.");
+      window.location.href = "/login";
+    } catch (error: unknown) {
+      const firebaseError = error as { code?: string; message?: string };
+
+      // Handle specific Firebase errors
+      switch (firebaseError.code) {
+        case "auth/email-already-in-use":
+          toast.error(
+            "Email này đã được sử dụng. Vui lòng sử dụng email khác."
+          );
+          break;
+        case "auth/invalid-email":
+          toast.error("Email không hợp lệ");
+          break;
+        case "auth/weak-password":
+          toast.error("Mật khẩu quá yếu. Vui lòng chọn mật khẩu mạnh hơn.");
+          break;
+        case "auth/operation-not-allowed":
+          toast.error("Đăng ký email/password chưa được kích hoạt");
+          break;
+        default:
+          toast.error(
+            firebaseError.message || "Đăng ký thất bại. Vui lòng thử lại."
+          );
+      }
+      console.error("Signup error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -133,9 +169,21 @@ const Signup: React.FC = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              disabled={isLoading}
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                isLoading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-indigo-600 hover:bg-indigo-700"
+              }`}
             >
-              Tạo tài khoản
+              {isLoading ? (
+                <div className="flex items-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Đang xử lý...
+                </div>
+              ) : (
+                "Tạo tài khoản"
+              )}
             </button>
           </div>
         </form>
