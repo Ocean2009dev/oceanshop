@@ -122,3 +122,53 @@ git push origin main
 3. Setup monitoring alerts
 4. Optimize for SEO
 5. Setup CI/CD pipeline
+
+## 🔧 Build Issues & Solutions
+
+### Firebase Build Error
+
+**Lỗi**: `Failed to resolve entry for package "firebase"`
+
+**Nguyên nhân**: Firebase v9+ sử dụng modular imports, không thể bundle trong `manualChunks` như cách cũ.
+
+**Giải pháp**:
+
+- Loại bỏ Firebase khỏi `manualChunks` trong `vite.config.ts`
+- Để Vite tự động xử lý Firebase bundling
+- Chỉ giữ lại manual chunks cho React và React Router
+
+### Cấu hình Vite đã fix:
+
+```typescript
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  build: {
+    outDir: "dist",
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          router: ["react-router-dom"],
+          // Loại bỏ firebase khỏi đây
+        },
+      },
+    },
+  },
+});
+```
+
+### Test Build Locally:
+
+```bash
+npm run build
+npm run preview
+```
+
+Build thành công với output:
+
+- `index.html`: 0.96 kB
+- `index.css`: 41.27 kB
+- `vendor.js`: 11.83 kB (React core)
+- `router.js`: 76.57 kB (React Router)
+- `index.js`: 489.38 kB (App code + Firebase)
