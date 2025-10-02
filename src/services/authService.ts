@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, deleteUser as firebaseDeleteUser, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, deleteUser as firebaseDeleteUser, getAuth, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { app } from './firebase';
 
 const auth = getAuth(app);
@@ -7,8 +7,18 @@ const auth = getAuth(app);
 export const signup = async (email: string, password: string) => {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        // xác minh email thật
+        await sendEmailVerification(userCredential.user, {
+            url: window.location.origin + '/login',
+            handleCodeInApp: false, // Link mở trong browser
+        });
+
+        // 3. Đăng xuất để bắt buộc verify
+        await signOut(auth);
+
+
         console.log("Đăng ký thành công:", userCredential.user.email);
-        return userCredential.user;
+        return { success: true, message: 'Kiểm tra email để xác nhận!' };
     } catch (error: unknown) {
         console.error("Signup error:", error);
         // Don't wrap the error, let Firebase error codes pass through
@@ -19,11 +29,14 @@ export const signup = async (email: string, password: string) => {
 // đăng nhập firebase
 export const signInWithEmail = async (email: string, password: string, requireEmailVerification: boolean = false) => {
     try {
-        console.log("Attempting to sign in with:", email);
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        console.log("User signed in, email verified:", user.emailVerified);
+        // ✅ KIỂM TRA: Phải verify email mới cho vào
+        if (!user.emailVerified) {
+            await signOut(auth); // Đăng xuất ngay
+            throw new Error('Vui lòng xác thực email trước khi đăng nhập!');
+        }
 
         // Reload user để cập nhật trạng thái xác minh
         await user.reload();
