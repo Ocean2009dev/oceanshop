@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../services/authService";
 
 const Signup: React.FC = () => {
@@ -11,6 +11,7 @@ const Signup: React.FC = () => {
     confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,7 +39,7 @@ const Signup: React.FC = () => {
     try {
       await signup(formData.email, formData.password);
       toast.success("Đăng ký thành công! Vui lòng đăng nhập.");
-      window.location.href = "/login";
+      navigate("/login");
     } catch (error: unknown) {
       const firebaseError = error as { code?: string; message?: string };
 

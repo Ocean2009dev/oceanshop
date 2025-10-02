@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { signInWithEmail } from "../services/authService";
 
 const Login: React.FC = () => {
@@ -8,6 +8,11 @@ const Login: React.FC = () => {
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get the intended destination or default to home
+  const from = location.state?.from?.pathname || "/";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,7 +32,7 @@ const Login: React.FC = () => {
 
       if (userCurrent) {
         toast.success("Đăng nhập thành công");
-        window.location.href = "/";
+        navigate(from, { replace: true });
       }
     } catch (error: unknown) {
       console.error("Login error:", error);

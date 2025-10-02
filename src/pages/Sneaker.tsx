@@ -138,7 +138,6 @@ export default function Sneaker() {
   useEffect(() => {
     applyFilters();
   }, [
-    applyFilters,
     productDiscountList,
     selectedBrands,
     selectedPriceRange,

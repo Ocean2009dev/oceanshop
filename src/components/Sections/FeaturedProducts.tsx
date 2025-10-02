@@ -367,6 +367,7 @@ export const CouponTable: React.FC = () => {
           {productDiscountList.map((productDiscount) => {
             return (
               <Card
+                key={productDiscount.id || Math.random()}
                 product={{
                   ...productDiscount,
                   id: String(productDiscount.id || Math.random()),
@@ -633,6 +634,7 @@ export const Product: React.FC = () => {
           {productDiscountList.map((product) => {
             return (
               <Card
+                key={product.id || Math.random()}
                 product={{
                   ...product,
                   id: String(product.id || Math.random()),

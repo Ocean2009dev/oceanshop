@@ -11,8 +11,12 @@ import { Payment } from "./pages/Payment.tsx";
 import Product from "./pages/Product.tsx";
 import Sneaker from "./pages/Sneaker.tsx";
 import Text from "./pages/Text.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
 import "./styles/global.css";
 import Signup from "./pages/Signup.tsx";
+import { AuthProvider } from "./contexts/AuthContext.tsx";
+import { ProtectedRoute } from "./components/Auth/ProtectedRoute.tsx";
+import { PublicRoute } from "./components/Auth/PublicRoute.tsx";
 
 const router = createBrowserRouter([
   {
@@ -36,14 +40,32 @@ const router = createBrowserRouter([
         element: <Product />,
       },
 
-      // Auth pages
+      // Auth pages (public routes - redirect if already logged in)
       {
         path: "login",
-        element: <Login />,
+        element: (
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        ),
       },
       {
         path: "signup",
-        element: <Signup />,
+        element: (
+          <PublicRoute>
+            <Signup />
+          </PublicRoute>
+        ),
+      },
+
+      // Protected routes
+      {
+        path: "dashboard",
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        ),
       },
 
       // Other pages
@@ -77,6 +99,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );

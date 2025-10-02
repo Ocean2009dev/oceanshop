@@ -12,12 +12,14 @@ import {
   FaUser,
   FaX,
 } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { productAPI } from "../../api/product";
 import { CountContext } from "../../contexts/CountContext";
-import { logout, onAuthStateChange } from "../../services/authService";
+import { useAuth } from "../../contexts/AuthContext";
+import { logout } from "../../services/authService";
 import SearchBox from "../Common/sreachBox";
 import Container from "./Container";
+import toast from "react-hot-toast";
 
 interface ProductItem {
   id: string;
@@ -430,14 +432,9 @@ export const HeaderTop: React.FC = () => {
     return () => clearInterval(timer);
   }, [shoesList]);
 
-  // Theo dõi trạng thái đăng nhập
-  useEffect(() => {
-    const unsubscribe = onAuthStateChange((currentUser) => {
-      setUser(currentUser);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  // Sử dụng AuthContext thay vì state riêng
+  const { currentUser, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   // handle filter location
   const handleFilterLocation = (
@@ -495,15 +492,15 @@ export const HeaderTop: React.FC = () => {
     return totalItems;
   });
 
-  const [user, setUser] = useState<any>(null);
-
   const handleLogOut = async () => {
     try {
       await logout();
-      setUser(null);
+      toast.success("Đăng xuất thành công");
       setShowUser(false);
       setShowUserMenu(false);
+      navigate("/");
     } catch (error) {
+      toast.error("Lỗi khi đăng xuất");
       console.error("Lỗi đăng xuất:", error);
     }
   };
@@ -704,7 +701,7 @@ export const HeaderTop: React.FC = () => {
             )}
 
             {/* đăng nhập */}
-            {user ? (
+            {isAuthenticated ? (
               <div className="ml-4 relative">
                 <div
                   className="flex items-center cursor-pointer"
@@ -716,7 +713,7 @@ export const HeaderTop: React.FC = () => {
                     <span className="text-sm">Xin chào!</span>
                     <div className="flex items-center">
                       <span className="mr-0.5 text-sm font-medium">
-                        {user.email?.split("@")[0] || "User"}
+                        {currentUser?.email?.split("@")[0] || "User"}
                       </span>
                       <FaAngleDown
                         className={`transition-transform ${
@@ -732,16 +729,27 @@ export const HeaderTop: React.FC = () => {
                     <div className="p-4">
                       <div className="text-black mb-3 pb-3 border-b">
                         <p className="font-medium">
-                          {user.displayName || "Người dùng"}
+                          {currentUser?.displayName || "Người dùng"}
                         </p>
-                        <p className="text-sm text-gray-600">{user.email}</p>
+                        <p className="text-sm text-gray-600">
+                          {currentUser?.email}
+                        </p>
                       </div>
-                      <button
-                        onClick={handleLogOut}
-                        className="w-full text-left px-3 py-2 text-red-600 hover:bg-red-50 rounded transition-colors"
-                      >
-                        Đăng xuất
-                      </button>
+                      <div className="space-y-1">
+                        <Link
+                          to="/dashboard"
+                          onClick={() => setShowUserMenu(false)}
+                          className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-50 rounded transition-colors"
+                        >
+                          Dashboard
+                        </Link>
+                        <button
+                          onClick={handleLogOut}
+                          className="w-full text-left px-3 py-2 text-red-600 hover:bg-red-50 rounded transition-colors"
+                        >
+                          Đăng xuất
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
