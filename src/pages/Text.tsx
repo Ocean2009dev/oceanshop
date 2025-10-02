@@ -2,20 +2,19 @@ import { useState } from "react";
 import Container from "../components/Layout/Container";
 
 const Text = () => {
-  const [name, setName] = useState("");
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     sdt: "",
   });
-  const changeData = (e) => {
+  const changeData = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
-  const handSend = async (e) => {
+  const handSend = async (e: React.FormEvent) => {
     e.preventDefault();
     const url = "http://localhost:8017/api/user";
     try {
@@ -42,7 +41,7 @@ const Text = () => {
   return (
     <>
       <Container>
-        <h1>Nơi này để hiển thị html : {name} </h1>
+        <h1>Nơi này để hiển thị html </h1>
 
         {/* Counter Section */}
         <div className="flex flex-col items-center gap-6 my-8 p-6 bg-gray-50 rounded-lg shadow-sm">
