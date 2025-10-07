@@ -2,8 +2,23 @@ import type React from "react";
 import { FaArrowPointer, FaLocationDot, FaPhone } from "react-icons/fa6";
 import { MdOutlineEmail } from "react-icons/md";
 import Container from "./Container";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 const Footer: React.FC = () => {
+  const [mail, setMail] = useState("");
+  const sendNotications = () => {
+    if (mail.length > 0) {
+      const regex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+      if (!regex.test(mail)) {
+        toast.error("Email không hợp lệ");
+      } else {
+        toast.success("Hãy đón nhận tin mới nhất từ cửa hàng nhé.");
+      }
+    } else {
+      toast.error("Bạn chưa điền email");
+    }
+  };
   return (
     <footer className=" bg-bgheader w-full text-white relative">
       <Container>
@@ -17,12 +32,17 @@ const Footer: React.FC = () => {
               <div className="w-full flex items-center bg-white md:w-[350px] ">
                 <MdOutlineEmail className="mx-2 text-[#9c9c9c]" />
                 <input
+                  onChange={(e) => setMail(e.target.value)}
+                  value={mail}
                   type="text"
                   placeholder="Email"
                   className="w-full placeholder:text-[#9c9c9c] text-black text-[14px] outline-none placeholder:text-[14px] py-3"
                 />
               </div>
-              <div className=" flex items-center  py-3 px-4 bg-[#111] uppercase text-[14px] whitespace-nowrap ">
+              <div
+                onClick={sendNotications}
+                className=" flex items-center  py-3 px-4 bg-[#111] uppercase text-[14px] whitespace-nowrap "
+              >
                 <FaArrowPointer className="mr-2" />
                 Đăng Ký
               </div>

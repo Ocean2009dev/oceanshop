@@ -6,6 +6,8 @@ import Contact from "./pages/Contact.tsx";
 import Features from "./pages/Features.tsx";
 import Home from "./pages/Home.tsx";
 import Login from "./pages/Login.tsx";
+import News from "./pages/News.tsx";
+import NewsDetail from "./pages/NewsDetail.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { Payment } from "./pages/Payment.tsx";
 import Product from "./pages/Product.tsx";
@@ -72,6 +74,14 @@ const router = createBrowserRouter([
       {
         path: "contact",
         element: <Contact />,
+      },
+      {
+        path: "news",
+        element: <News />,
+      },
+      {
+        path: "news/:id",
+        element: <NewsDetail />,
       },
       {
         path: "features",

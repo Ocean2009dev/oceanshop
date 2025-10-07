@@ -87,8 +87,8 @@ export const SalesToast: React.FC = () => {
     },
     {
       id: 10,
-      customerName: "C Nga",
-      location: "Đắk Lắk",
+      customerName: "C Hằng",
+      location: "Nha Trang",
       productName: "Giày Nike Wmns Air Jordan 1 Mid 'Particle Grey' DO7139-002",
       timeAgo: "2 phút trước",
       imgA: "https://res.cloudinary.com/ds6vqu3dy/image/upload/v1753876745/shoe10a_givh0g.png",

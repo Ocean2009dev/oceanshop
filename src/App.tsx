@@ -25,7 +25,7 @@ function App() {
           position="top-right"
           containerStyle={{
             zIndex: 9999,
-            top: 100, // Tránh đè lên header nếu cần
+            top: window.innerWidth <= 640 ? 60 : 100, // Tránh đè lên header nếu cần
           }}
         />
       </div>

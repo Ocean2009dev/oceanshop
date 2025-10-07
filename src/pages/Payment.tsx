@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import Container from "../components/Layout/Container";
 import { CountContext } from "../contexts/CountContext";
+import toast from "react-hot-toast";
 
 export const Payment = () => {
   const [formData, setFormData] = useState({
@@ -61,7 +62,9 @@ export const Payment = () => {
     if (!validateForm()) return;
 
     if (cartData.length === 0) {
-      alert("Giỏ hàng trống! Vui lòng thêm sản phẩm trước khi thanh toán.");
+      toast.error(
+        "Giỏ hàng trống! Vui lòng thêm sản phẩm trước khi thanh toán."
+      );
       return;
     }
 

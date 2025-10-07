@@ -1,5 +1,6 @@
 import type React from "react";
 import { FaAnglesRight, FaCalendarDays } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 import Carousel from "../Common/Carousel";
 
 export const NewsletterSection: React.FC = () => {
@@ -52,17 +53,24 @@ export const NewsletterSection: React.FC = () => {
   ];
   return (
     <div className="mx-2 md:mx-0 pb-6">
-      <h1 className="uppercase text-[#000] text-[20px] text-center font-bold mb-3">
-        Tin tức
-      </h1>
+      <div className="flex justify-between items-center mb-3">
+        <h1 className="uppercase text-[#000] text-[20px] font-bold">Tin tức</h1>
+        <Link
+          to="/news"
+          className="text-sm text-gray-600 hover:text-shophover transition-colors flex items-center"
+        >
+          Xem tất cả <FaAnglesRight className="ml-1" />
+        </Link>
+      </div>
       {/* Desktop: Grid bình thường */}
       <div className="hidden md:grid md:grid-cols-4 md:gap-6 mb-40">
         {blogList.map((blogItem) => {
           const { id, title, bgPost, date, describe } = blogItem;
           return (
-            <div
+            <Link
               key={id}
-              className="min-w-[280px] w-full h-full relative cursor-pointer"
+              to={`/news/${id}`}
+              className="min-w-[280px] w-full h-full relative cursor-pointer block"
             >
               <img
                 src={bgPost}
@@ -75,12 +83,9 @@ export const NewsletterSection: React.FC = () => {
                   <h1 className="text-[16px] text-[#000] font-semibold line-clamp-2 min-h-[48px] ">
                     {title}
                   </h1>
-                  <a
-                    href=""
-                    className="text-[14px] text-[#000] line-clamp-2 mb-2"
-                  >
+                  <p className="text-[14px] text-[#000] line-clamp-2 mb-2">
                     {describe}
-                  </a>
+                  </p>
                 </div>
                 <div className="flex justify-between pt-2 border-t-2 border-[#000]">
                   <div className="text-[#000] text-[12px] flex items-center">
@@ -93,7 +98,7 @@ export const NewsletterSection: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>
@@ -105,9 +110,10 @@ export const NewsletterSection: React.FC = () => {
           {blogList.map((blogItem) => {
             const { id, title, bgPost, date, describe } = blogItem;
             return (
-              <div
+              <Link
                 key={id}
-                className="min-w-[280px] w-full h-full relative cursor-pointer"
+                to={`/news/${id}`}
+                className="min-w-[280px] w-full h-full relative cursor-pointer block"
               >
                 <img
                   src={bgPost}
@@ -119,12 +125,9 @@ export const NewsletterSection: React.FC = () => {
                   <h1 className="text-[16px] text-[#000] font-semibold line-clamp-1">
                     {title}
                   </h1>
-                  <a
-                    href=""
-                    className="text-[14px] text-[#000] line-clamp-2 mb-2"
-                  >
+                  <p className="text-[14px] text-[#000] line-clamp-2 mb-2">
                     {describe}
-                  </a>
+                  </p>
                   <div className="flex justify-between pt-2 border-t-2 border-[#000]">
                     <div className="text-[#000] text-[12px] flex items-center">
                       <FaCalendarDays />
@@ -136,7 +139,7 @@ export const NewsletterSection: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </Carousel>

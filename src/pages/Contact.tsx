@@ -1,9 +1,167 @@
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { FaArrowPointer, FaLocationDot, FaPhone } from "react-icons/fa6";
 import { MdOutlineEmail } from "react-icons/md";
 import { Link } from "react-router-dom";
 import Container from "../components/Layout/Container";
 
 export default function Contact() {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const [errors, setErrors] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Validation functions
+  const validateEmail = (email: string): string => {
+    if (!email.trim()) return "Email là bắt buộc";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return "Email không hợp lệ";
+    return "";
+  };
+
+  const validatePhone = (phone: string): string => {
+    if (!phone.trim()) return "Số điện thoại là bắt buộc";
+    const phoneRegex = /^[0-9]{10,11}$/;
+    if (!phoneRegex.test(phone.replace(/\s/g, ""))) {
+      return "Số điện thoại phải có 10-11 chữ số";
+    }
+    return "";
+  };
+
+  const validateFullName = (name: string): string => {
+    if (!name.trim()) return "Họ tên là bắt buộc";
+    if (name.trim().length < 2) return "Họ tên phải có ít nhất 2 ký tự";
+    return "";
+  };
+
+  const validateMessage = (message: string): string => {
+    if (!message.trim()) return "Nội dung tin nhắn là bắt buộc";
+    if (message.trim().length < 10) return "Tin nhắn phải có ít nhất 10 ký tự";
+    return "";
+  };
+
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case "fullName":
+        return validateFullName(value);
+      case "email":
+        return validateEmail(value);
+      case "phone":
+        return validatePhone(value);
+      case "message":
+        return validateMessage(value);
+      default:
+        return "";
+    }
+  };
+
+  const saveDataForm = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Clear error when user starts typing
+    if (errors[name as keyof typeof errors]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  const validateFormBlurEvent = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    const error = validateField(name, value);
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: error,
+    }));
+  };
+
+  const validateAllFields = (): boolean => {
+    const newErrors = {
+      fullName: validateFullName(formData.fullName),
+      email: validateEmail(formData.email),
+      phone: validatePhone(formData.phone),
+      message: validateMessage(formData.message),
+    };
+
+    setErrors(newErrors);
+
+    // Return true if no errors
+    return !Object.values(newErrors).some((error) => error !== "");
+  };
+
+  const submitContact = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate all fields before submission
+    if (!validateAllFields()) {
+      toast.error("Vui lòng kiểm tra lại thông tin đã nhập");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const res = await fetch("http://localhost:8017/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        toast.error("Gửi dữ liệu không thành công!!!");
+        return;
+      }
+
+      toast.success(
+        "Gửi dữ liệu thành công! Chúng tôi sẽ liên hệ với bạn sớm."
+      );
+
+      // Reset form after successful submission
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
+      setErrors({
+        fullName: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
+
+      const data = await res.json();
+      console.log("Dữ liệu nhận được từ BE", data);
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Có lỗi xảy ra khi gửi thông tin. Vui lòng thử lại!");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <Container>
       <div className="h-full px-4 md:p-0">
@@ -71,55 +229,139 @@ export default function Contact() {
                   gửi thắc mắc cho chúng tôi
                 </h6>
 
-                <form action="">
-                  <div className="flex flex-col mb-4">
-                    <label htmlFor="" className="pb-2">
-                      Họ và tên
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Nhập tên của bạn"
-                      className="px-5 py-2.5 border border-content mb-2 outline-0 "
-                    />
+                <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+                  <div className="flex">
+                    <div className="ml-3">
+                      <p className="text-sm text-blue-700">
+                        <strong>Lưu ý:</strong> Vui lòng điền đầy đủ thông tin
+                        để chúng tôi có thể hỗ trợ bạn tốt nhất. Các trường có
+                        dấu <span className="text-red-500">*</span> là bắt buộc.
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex flex-col mb-4">
-                    <label htmlFor="" className="pb-2">
-                      Số điện thoại
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Nhập số điện thoại của bạn"
-                      className="px-5 py-2.5 border border-content mb-2 outline-0 "
-                    />
-                  </div>
-                  <div className="flex flex-col mb-4">
-                    <label htmlFor="" className="pb-2">
-                      Email
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Nhập Email của bạn"
-                      className="px-5 py-2.5 border border-content mb-2 outline-0 "
-                    />
-                  </div>
-                  <div className="flex flex-col mb-4">
-                    <label htmlFor="" className="pb-2">
-                      Message
-                    </label>
+                </div>
 
+                <form onSubmit={submitContact}>
+                  <div className="flex flex-col mb-4">
+                    <label htmlFor="fullName" className="pb-2 font-medium">
+                      Họ và tên <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="fullName"
+                      name="fullName"
+                      placeholder="Nhập họ và tên của bạn"
+                      className={`px-5 py-2.5 border rounded-md outline-none transition-colors ${
+                        errors.fullName
+                          ? "border-red-500 focus:border-red-500"
+                          : "border-gray-300 focus:border-blue-500"
+                      }`}
+                      onChange={saveDataForm}
+                      onBlur={validateFormBlurEvent}
+                      value={formData.fullName}
+                    />
+                    {errors.fullName && (
+                      <span className="text-red-500 text-sm mt-1">
+                        {errors.fullName}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col mb-4">
+                    <label htmlFor="phone" className="pb-2 font-medium">
+                      Số điện thoại <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      placeholder="Nhập số điện thoại của bạn"
+                      className={`px-5 py-2.5 border rounded-md outline-none transition-colors ${
+                        errors.phone
+                          ? "border-red-500 focus:border-red-500"
+                          : "border-gray-300 focus:border-blue-500"
+                      }`}
+                      onChange={saveDataForm}
+                      onBlur={validateFormBlurEvent}
+                      value={formData.phone}
+                    />
+                    {errors.phone && (
+                      <span className="text-red-500 text-sm mt-1">
+                        {errors.phone}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col mb-4">
+                    <label htmlFor="email" className="pb-2 font-medium">
+                      Email <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="Nhập email của bạn"
+                      className={`px-5 py-2.5 border rounded-md outline-none transition-colors ${
+                        errors.email
+                          ? "border-red-500 focus:border-red-500"
+                          : "border-gray-300 focus:border-blue-500"
+                      }`}
+                      onChange={saveDataForm}
+                      onBlur={validateFormBlurEvent}
+                      value={formData.email}
+                    />
+                    {errors.email && (
+                      <span className="text-red-500 text-sm mt-1">
+                        {errors.email}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col mb-4">
+                    <label htmlFor="message" className="pb-2 font-medium">
+                      Nội dung tin nhắn <span className="text-red-500">*</span>
+                    </label>
                     <textarea
-                      placeholder="Nội dung..."
-                      name=""
-                      id=""
-                      className="px-5 py-2.5 border border-content mb-2 outline-0 resize-none"
-                    ></textarea>
+                      id="message"
+                      name="message"
+                      placeholder="Nhập nội dung tin nhắn của bạn..."
+                      rows={5}
+                      className={`px-5 py-2.5 border rounded-md outline-none transition-colors resize-vertical ${
+                        errors.message
+                          ? "border-red-500 focus:border-red-500"
+                          : "border-gray-300 focus:border-blue-500"
+                      }`}
+                      onChange={saveDataForm}
+                      onBlur={validateFormBlurEvent}
+                      value={formData.message}
+                    />
+                    {errors.message && (
+                      <span className="text-red-500 text-sm mt-1">
+                        {errors.message}
+                      </span>
+                    )}
                   </div>
-                  <div className="inline-flex items-center  py-3 px-4 text-white bg-[#111] uppercase text-[14px] whitespace-nowrap cursor-pointer">
-                    <span className="mr-2">Gửi liên hệ</span>
-                    <FaArrowPointer />
-                  </div>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`inline-flex items-center py-3 px-6 text-white uppercase text-sm font-medium rounded-md transition-colors ${
+                      isSubmitting
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-black hover:bg-gray-800 cursor-pointer"
+                    }`}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        <span>Đang gửi...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="mr-2">Gửi liên hệ</span>
+                        <FaArrowPointer />
+                      </>
+                    )}
+                  </button>
                 </form>
               </div>
+
               <div className="w-full">
                 <h6 className="text-xl font-bold uppercase mb-4">
                   thông tin liên hệ
