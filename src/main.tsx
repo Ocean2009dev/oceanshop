@@ -10,6 +10,8 @@ import News from "./pages/News.tsx";
 import NewsDetail from "./pages/NewsDetail.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { Payment } from "./pages/Payment.tsx";
+import { PaymentReturn } from "./pages/PaymentReturn.tsx";
+import { Orders } from "./pages/Orders.tsx";
 import Product from "./pages/Product.tsx";
 import Sneaker from "./pages/Sneaker.tsx";
 import Text from "./pages/Text.tsx";
@@ -88,11 +90,21 @@ const router = createBrowserRouter([
         element: <Features />,
       },
 
-      // Legacy route redirect
+      // Payment routes
       {
-        path: "pay",
+        path: "payment",
         element: <Payment />,
       },
+      {
+        path: "payment/return",
+        element: <PaymentReturn />,
+      },
+      {
+        path: "orders",
+        element: <Orders />,
+      },
+
+      // Legacy route redirect
 
       // Catch all 404
       {

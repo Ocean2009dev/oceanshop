@@ -1,8 +1,11 @@
 import { useContext, useState } from "react";
+import toast from "react-hot-toast";
 import { FaArrowLeftLong } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 import Container from "../components/Layout/Container";
 import { CountContext } from "../contexts/CountContext";
-import toast from "react-hot-toast";
+import { vnpayService } from "../services/vnpayService";
+import type { OrderInfo } from "../types/vnpay";
 
 export const Payment = () => {
   const [formData, setFormData] = useState({
@@ -70,36 +73,33 @@ export const Payment = () => {
 
     setIsProcessing(true);
 
-    // Tạo thông tin đơn hàng
-    const orderData = {
-      customerInfo: formData,
-      items: cartData,
-      subtotal: calculateSubtotal(),
-      vat: calculateVAT(),
-      total: calculateTotal(),
-      orderDate: new Date().toISOString(),
-    };
+    try {
+      // Tạo thông tin đơn hàng cho VNPay
+      const orderInfo: OrderInfo = {
+        orderId: "", // Sẽ được tạo tự động trong service
+        amount: calculateTotal(),
+        orderInfo: `Thanh toán đơn hàng OceanShop - ${cartData.length} sản phẩm`,
+        customerInfo: formData,
+        items: cartData,
+      };
 
-    // Giả lập xử lý thanh toán
-    setTimeout(() => {
-      console.log("Order Data:", orderData);
-      // Chuyển hướng đến VNPay (giả lập)
-      const success = confirm(
-        `Thanh toán thành công!\nTổng tiền: ${calculateTotal().toLocaleString(
-          "vi-VN"
-        )}₫\n\nBạn có muốn xóa giỏ hàng không?`
-      );
+      // Gọi VNPay service để tạo URL thanh toán
+      const result = await vnpayService.createPayment(orderInfo);
 
-      if (success) {
-        clearCart();
-        alert("Cảm ơn bạn đã mua hàng! Giỏ hàng đã được xóa.");
+      if (result.success && result.paymentUrl) {
+        toast.success("Đang chuyển hướng đến VNPay...");
+
+        // Chuyển hướng đến VNPay
+        window.location.href = result.paymentUrl;
+      } else {
+        toast.error(result.message || "Có lỗi xảy ra khi tạo thanh toán");
+        setIsProcessing(false);
       }
-
+    } catch (error) {
+      console.error("Lỗi thanh toán:", error);
+      toast.error("Có lỗi xảy ra trong quá trình thanh toán");
       setIsProcessing(false);
-
-      // Có thể clear giỏ hàng sau khi thanh toán thành công
-      // clearCart();
-    }, 2000);
+    }
   };
 
   const context = useContext(CountContext);
@@ -107,7 +107,7 @@ export const Payment = () => {
     throw new Error("Payment must be used within CountProvider");
   }
 
-  const { getData, clearCart, removeItem } = context;
+  const { getData, removeItem } = context;
   const cartData = getData();
   const vatRate = 0.1; // 10% VAT
 
@@ -133,6 +133,9 @@ export const Payment = () => {
   const calculateTotal = () => {
     return calculateSubtotal() + calculateVAT();
   };
+
+  const navigate = useNavigate();
+
   return (
     <>
       <Container>
@@ -143,7 +146,10 @@ export const Payment = () => {
           <div className="max-w-4xl mx-auto">
             {/* Header */}
             <div className="flex items-center mb-8">
-              <button className="flex items-center text-gray-600 hover:text-gray-800 transition-colors cursor-pointer">
+              <button
+                className="flex items-center text-gray-600 hover:text-gray-800 transition-colors cursor-pointer"
+                onClick={() => navigate(-1)}
+              >
                 <FaArrowLeftLong className="mr-2" />
                 Quay lại
               </button>

@@ -371,6 +371,7 @@ export const HeaderTop: React.FC = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [menu, setMenu] = useState(false);
   const [shoes, setShoes] = useState("Bạn đang tìm kiếm gì... ?");
+
   const shoesList = useMemo(
     () => [
       "Bạn đang tìm giày cho người yêu...",
@@ -743,6 +744,13 @@ export const HeaderTop: React.FC = () => {
                         >
                           Dashboard
                         </Link>
+                        <Link
+                          to="/orders"
+                          onClick={() => setShowUserMenu(false)}
+                          className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-50 rounded transition-colors"
+                        >
+                          Đơn hàng của tôi
+                        </Link>
                         <button
                           onClick={handleLogOut}
                           className="w-full text-left px-3 py-2 text-red-600 hover:bg-red-50 rounded transition-colors"
@@ -863,7 +871,7 @@ export const HeaderTop: React.FC = () => {
                       className="p-3 border-[1px] w-full outline-0 uppercase font-bold cursor-pointer hover:bg-black hover:text-white"
                       onClick={handleCart}
                     >
-                      <Link to={"pay"}> thanh toán</Link>
+                      <Link to={"payment"}> thanh toán</Link>
                     </button>
                   </div>
                 </div>
