@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
@@ -6,8 +6,12 @@ import Container from "../components/Layout/Container";
 import { CountContext } from "../contexts/CountContext";
 import { vnpayService } from "../services/vnpayService";
 import type { OrderInfo } from "../types/vnpay";
+import { useAuth } from "../contexts/AuthContext";
 
 export const Payment = () => {
+  const { currentUser, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     phone: "",
@@ -19,6 +23,17 @@ export const Payment = () => {
     phone: "",
     fullName: "",
   });
+
+  // Auto-fill form với thông tin user nếu đã đăng nhập
+  useEffect(() => {
+    if (isAuthenticated && currentUser) {
+      setFormData((prev) => ({
+        ...prev,
+        email: currentUser.email || "",
+        fullName: currentUser.displayName || "",
+      }));
+    }
+  }, [isAuthenticated, currentUser]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -62,6 +77,15 @@ export const Payment = () => {
   };
 
   const handlePayment = async () => {
+    // Kiểm tra đăng nhập trước
+    if (!isAuthenticated) {
+      toast.error("Bạn phải đăng nhập trước khi thanh toán");
+      // Lưu current path để redirect về sau khi đăng nhập
+      sessionStorage.setItem("redirectAfterLogin", "/payment");
+      navigate("/login");
+      return;
+    }
+
     if (!validateForm()) return;
 
     if (cartData.length === 0) {
@@ -89,9 +113,13 @@ export const Payment = () => {
       if (result.success && result.paymentUrl) {
         toast.success("Đang chuyển hướng đến VNPay...");
 
+        // Log for debugging
+        console.log("Redirecting to VNPay:", result.paymentUrl);
+
         // Chuyển hướng đến VNPay
         window.location.href = result.paymentUrl;
       } else {
+        console.error("VNPay payment creation failed:", result);
         toast.error(result.message || "Có lỗi xảy ra khi tạo thanh toán");
         setIsProcessing(false);
       }
@@ -134,7 +162,75 @@ export const Payment = () => {
     return calculateSubtotal() + calculateVAT();
   };
 
-  const navigate = useNavigate();
+  // Hiển thị thông báo yêu cầu đăng nhập nếu chưa đăng nhập
+  if (!isAuthenticated) {
+    return (
+      <Container>
+        <div className="py-3">
+          <h1>Trang chủ / Thanh toán đơn hàng</h1>
+        </div>
+        <div className="min-h-screen py-8 px-4">
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
+              <div className="mb-6">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg
+                    className="w-8 h-8 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                  Yêu cầu đăng nhập
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  Bạn cần đăng nhập để tiếp tục thanh toán đơn hàng
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  onClick={() => {
+                    sessionStorage.setItem("redirectAfterLogin", "/payment");
+                    navigate("/login");
+                  }}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  Đăng nhập
+                </button>
+                <button
+                  onClick={() => {
+                    sessionStorage.setItem("redirectAfterLogin", "/payment");
+                    navigate("/signup");
+                  }}
+                  className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium"
+                >
+                  Đăng ký
+                </button>
+              </div>
+
+              <div className="mt-6">
+                <button
+                  onClick={() => navigate(-1)}
+                  className="text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  ← Quay lại
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <>
@@ -270,9 +366,27 @@ export const Payment = () => {
 
                 {/* Customer Information */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-700">
-                    Thông tin khách hàng
-                  </h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-gray-700">
+                      Thông tin khách hàng
+                    </h3>
+                    {isAuthenticated && currentUser && (
+                      <div className="text-sm text-green-600 flex items-center">
+                        <svg
+                          className="w-4 h-4 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        Đã đăng nhập
+                      </div>
+                    )}
+                  </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">

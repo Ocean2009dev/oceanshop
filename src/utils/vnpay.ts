@@ -5,7 +5,8 @@ export const VNPAY_CONFIG: VNPayConfig = {
     vnp_TmnCode: import.meta.env.VITE_VNPAY_TMN_CODE || 'YOUR_TMN_CODE', // Mã website tại VNPay
     vnp_HashSecret: import.meta.env.VITE_VNPAY_HASH_SECRET || 'YOUR_HASH_SECRET', // Chuỗi bí mật
     vnp_Url: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html', // URL sandbox, production: https://vnpayment.vn/paymentv2/vpcpay.html
-    vnp_ReturnUrl: import.meta.env.VITE_VNPAY_RETURN_URL || 'http://localhost:5173/payment/return', // URL return
+    vnp_ReturnUrl: import.meta.env.VITE_VNPAY_RETURN_URL ||
+        (typeof window !== 'undefined' ? `${window.location.origin}/payment/return` : 'http://localhost:5173/payment/return'), // Dynamic return URL
 };
 
 // Browser-compatible HMAC SHA512 implementation
@@ -63,8 +64,20 @@ export const createPaymentUrl = async (paymentData: VNPayPaymentRequest): Promis
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { vnp_SecureHash, ...dataWithoutHash } = paymentData;
 
+    // Debug logging
+    console.log('VNPay Config:', {
+        vnp_TmnCode: VNPAY_CONFIG.vnp_TmnCode,
+        vnp_ReturnUrl: VNPAY_CONFIG.vnp_ReturnUrl,
+        hasHashSecret: !!VNPAY_CONFIG.vnp_HashSecret,
+        hashSecretLength: VNPAY_CONFIG.vnp_HashSecret?.length
+    });
+
+    console.log('Payment Data (before hash):', dataWithoutHash);
+
     // Tạo secure hash
     const secureHash = await createSecureHash(dataWithoutHash, VNPAY_CONFIG.vnp_HashSecret);
+
+    console.log('Generated Hash:', secureHash);
 
     // Thêm secure hash vào data
     const finalData = {
@@ -77,7 +90,10 @@ export const createPaymentUrl = async (paymentData: VNPayPaymentRequest): Promis
         .map(key => `${key}=${encodeURIComponent(finalData[key as keyof typeof finalData])}`)
         .join('&');
 
-    return `${VNPAY_CONFIG.vnp_Url}?${queryString}`;
+    const finalUrl = `${VNPAY_CONFIG.vnp_Url}?${queryString}`;
+    console.log('Final VNPay URL:', finalUrl);
+
+    return finalUrl;
 };
 
 // Tạo mã đơn hàng unique

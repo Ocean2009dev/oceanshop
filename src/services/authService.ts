@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword, deleteUser as firebaseDeleteUser, getAu
 import { app } from './firebase';
 
 const auth = getAuth(app);
+export default auth;
 
 // đăng ký firebase
 export const signup = async (email: string, password: string) => {
@@ -102,3 +103,5 @@ export const logout = async () => {
 export const onAuthStateChange = (callback: (user: unknown) => void) => {
     return onAuthStateChanged(auth, callback);
 };
+
+// Kiểm tra đăng nhập trước khi thanh toán 
