@@ -1,6 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { FaArrowLeftLong } from "react-icons/fa6";
+import {
+  FaArrowLeftLong,
+  FaMinus,
+  FaPlus,
+  FaRegTrashCan,
+} from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import Container from "../components/Layout/Container";
 import { CountContext } from "../contexts/CountContext";
@@ -135,7 +140,7 @@ export const Payment = () => {
     throw new Error("Payment must be used within CountProvider");
   }
 
-  const { getData, removeItem } = context;
+  const { getData, removeItem, down, up } = context;
   const cartData = getData();
   const vatRate = 0.1; // 10% VAT
 
@@ -267,37 +272,37 @@ export const Payment = () => {
                     cartData.map((item) => (
                       <div
                         key={item.id}
-                        className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg"
+                        className=" space-x-4 p-4 bg-gray-50 rounded-lg"
                       >
-                        <div className="w-16 h-16 rounded-lg flex items-center justify-center">
-                          <img
-                            src={item.imgA}
-                            alt={item.title}
-                            className="w-full h-full object-cover rounded-lg"
-                          />
+                        <div className="flex items-center justify-between">
+                          <div className="w-16 h-16 rounded-lg flex items-center justify-center">
+                            <img
+                              src={item.imgA}
+                              alt={item.title}
+                              className="w-full h-full object-cover rounded-lg mr-2"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-gray-800">
+                              {item.title}
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                              {item.priceProduct} x {item.quantity || 1}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-gray-800">
-                            {item.title}
-                          </h3>
-                          <p className="text-sm text-gray-600">
-                            {item.priceProduct} x {item.quantity || 1}
-                          </p>
-                        </div>
-                        <div className="text-right flex flex-col items-end">
-                          <p className="font-bold text-gray-800 mb-2">
-                            {(
-                              convertStrToNumber(item.priceProduct || "0") *
-                              (item.quantity || 1)
-                            ).toLocaleString("vi-VN")}
-                            ₫
-                          </p>
-                          <button
-                            onClick={() => removeItem(item.id)}
-                            className="text-red-500 hover:text-red-700 text-sm underline"
-                          >
-                            Xóa
-                          </button>
+                        <div className=" flex justify-between items-center">
+                          <div className="flex">
+                            <FaPlus
+                              className="text-green-600 mr-9"
+                              onClick={() => up(item)}
+                            />
+                            <FaMinus
+                              className="text-red-600"
+                              onClick={() => down(item.id)}
+                            />
+                          </div>
+                          <FaRegTrashCan onClick={() => removeItem(item.id)} />
                         </div>
                       </div>
                     ))

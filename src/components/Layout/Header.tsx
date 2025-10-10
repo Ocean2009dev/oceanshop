@@ -7,7 +7,10 @@ import {
   FaCartShopping,
   FaFaceGrinSquint,
   FaLocationDot,
+  FaMinus,
   FaPhone,
+  FaPlus,
+  FaRegTrashCan,
   FaSistrix,
   FaUser,
   FaX,
@@ -476,7 +479,7 @@ export const HeaderTop: React.FC = () => {
     throw new Error("HeaderTop must be used within CountProvider");
   }
 
-  const { getCount, getData } = context;
+  const { getCount, getData, up, down, removeItem } = context;
   const Data = getData();
   const convertStrToNumber = (str: string) => {
     const removeCurrency = str.replace("₫", "");
@@ -832,20 +835,39 @@ export const HeaderTop: React.FC = () => {
                         {Data.map((item) => (
                           <div
                             key={item.id}
-                            className="flex items-center gap-3 p-2 bg-gray-50 rounded"
+                            className=" p-2 bg-gray-50 rounded"
                           >
-                            <img
-                              src={item.imgA}
-                              alt={item.title}
-                              className="w-12 h-12 object-cover rounded"
-                            />
-                            <div className="flex-1">
-                              <h4 className="text-sm font-medium line-clamp-1">
-                                {item.title}
-                              </h4>
-                              <p className="text-xs text-gray-600">
-                                {item.priceProduct} x {item.quantity || 1}
-                              </p>
+                            <div className="flex items-center gap-3">
+                              <img
+                                src={item.imgA}
+                                alt={item.title}
+                                className="w-12 h-12 object-cover rounded"
+                              />
+                              <div className="flex-1">
+                                <h4 className="text-sm font-medium line-clamp-1">
+                                  {item.title}
+                                </h4>
+                                <p className="text-xs text-gray-600">
+                                  {item.priceProduct} x {item.quantity || 1}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex justify-between items-center mr-2 mt-2">
+                              <div className="flex">
+                                <FaPlus
+                                  className="text-green-600 mr-9"
+                                  onClick={() => up(item)}
+                                />
+                                <FaMinus
+                                  className="text-red-600"
+                                  onClick={() => down(item.id)}
+                                />
+                              </div>
+
+                              <FaRegTrashCan
+                                onClick={() => removeItem(item.id)}
+                              />
                             </div>
                           </div>
                         ))}
@@ -864,7 +886,10 @@ export const HeaderTop: React.FC = () => {
                     </p>
                   </div>
                   <div className="flex justify-between gap-3">
-                    <button className="p-3 border-[1px] w-full outline-0 uppercase font-bold cursor-pointer bg-black text-white hover:bg-white hover:text-black">
+                    <button
+                      onClick={() => navigate("/orders")}
+                      className="p-3 border-[1px] w-full outline-0 uppercase font-bold cursor-pointer bg-black text-white hover:bg-white hover:text-black"
+                    >
                       xem giỏ hàng
                     </button>
                     <button

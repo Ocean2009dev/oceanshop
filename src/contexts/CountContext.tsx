@@ -12,7 +12,7 @@ interface AddToCartProps {
 interface CountContextType {
   count: number;
   up: (product: AddToCartProps) => void;
-  down: () => void;
+  down: (productId: string) => void;
   getCount: () => string | null;
   getData: () => AddToCartProps[];
   clearCart: () => void;
@@ -50,8 +50,34 @@ export const CountProvider = ({ children }: PropsWithChildren) => {
     setCount((prev) => prev + 1);
   };
 
-  const down = () => setCount((prev) => Math.max(0, prev - 1));
+  const down = (productId: string) => {
+    setdataProduct((prevData) => {
+      const existingProductIndex = prevData.findIndex(
+        (item) => item.id === productId
+      );
 
+      if (existingProductIndex !== -1) {
+        const updatedData = [...prevData];
+        const currentQuantity = updatedData[existingProductIndex].quantity || 1;
+
+        if (currentQuantity > 1) {
+          // Giảm quantity nếu > 1
+          updatedData[existingProductIndex] = {
+            ...updatedData[existingProductIndex],
+            quantity: currentQuantity - 1,
+          };
+          return updatedData;
+        } else {
+          // Xóa sản phẩm nếu quantity = 1
+          return updatedData.filter((item) => item.id !== productId);
+        }
+      }
+
+      return prevData;
+    });
+
+    setCount((prev) => Math.max(0, prev - 1));
+  };
   const getCount = () => {
     // Tính tổng số lượng sản phẩm thực tế trong giỏ hàng
     const totalQuantity = dataProduct.reduce(
