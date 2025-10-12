@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Container from "../components/Layout/Container";
 import { FaArrowPointer } from "react-icons/fa6";
 import toast from "react-hot-toast";
@@ -17,6 +17,7 @@ const Text = () => {
       [name]: value,
     }));
   };
+
   const handSend = async (e: React.FormEvent) => {
     e.preventDefault();
     const url = "http://localhost:8017/api/user";
@@ -44,12 +45,18 @@ const Text = () => {
       console.log("Lỗi:", error);
       setIsLoading(false);
       toast.error("Không thể gửi tới Backend");
+    } finally {
+      setFormData({
+        fullName: "",
+        email: "",
+        sdt: "",
+      });
     }
   };
   return (
     <>
       <Container>
-        <h1>Nơi này để hiển thị html </h1>
+        <h1>Nơi này để hiển thị html {formData.fullName} </h1>
         {/* Counter Section */}
         <div className="flex flex-col items-center gap-6 my-8 p-6 bg-gray-50 rounded-lg shadow-sm">
           <form action="" className="flex flex-col gap-2.5" onSubmit={handSend}>

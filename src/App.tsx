@@ -17,7 +17,6 @@ function App() {
           <Outlet />
         </div>
         <Footer />
-        {/* <Notications title="Thêm vào giỏ" content="Đã thêm" signal={true} /> */}
         <ScrollToTop />
         <ScrollOnRouteChange />
         <SalesToast />

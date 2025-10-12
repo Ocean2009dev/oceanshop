@@ -326,7 +326,7 @@ const Product = (): React.ReactElement => {
                       Thêm vào giỏ
                     </button>
                     <Link
-                      to="/pay"
+                      to="/payment"
                       state={{ productData: productData }}
                       className="flex-1 bg-white border border-blue-600 text-blue-600 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors text-center block"
                     >
