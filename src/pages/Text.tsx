@@ -1,7 +1,7 @@
-import { useContext, useState } from "react";
-import Container from "../components/Layout/Container";
-import { FaArrowPointer } from "react-icons/fa6";
+import { useState } from "react";
 import toast from "react-hot-toast";
+import { FaArrowPointer } from "react-icons/fa6";
+import Container from "../components/Layout/Container";
 
 const Text = () => {
   const [isLoading, setIsLoading] = useState(false);
